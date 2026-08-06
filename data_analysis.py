@@ -1,53 +1,52 @@
 import pandas as pd
-import numpy as np
 
-df = pd.read_csv(r"Dataset\Crop_recommendation.csv")
-df = df[["N","P","K","ph"]]
+import config
+
+IDEAL_BANDS = {
+    "N": {"ideal": (40.0, 60.0), "near": (30.0, 75.0)},
+    "P": {"ideal": (15.0, 30.0), "near": (10.0, 45.0)},
+    "K": {"ideal": (60.0, 150.0), "near": (40.0, 175.0)},
+    "ph": {"ideal": (6.0, 7.0), "near": (5.5, 8.0)},
+}
+
+# "Good" requires score >= 5/8: e.g. two nutrients in the ideal band plus
+# another near it, or one ideal plus all three near. "Moderate" >= 3/8.
+# Note: K's ideal band is dataset-aware (60-150) because this Kaggle dataset
+# is K-poor; config.IDEAL_RANGES keeps the agronomic 100-150 for advice.
+GOOD_SCORE = 5
+MODERATE_SCORE = 3
+
+
+def score_nutrient(value, ideal_lo, ideal_hi, near_lo, near_hi):
+    """2 points inside the ideal band, 1 point near it, 0 otherwise. Contiguous, no dead zones."""
+    if ideal_lo <= value <= ideal_hi:
+        return 2
+    if near_lo <= value <= near_hi:
+        return 1
+    return 0
+
 
 def fertility_status(row):
     score = 0
-    
-    # Nitrogen
-    if row['N'] < 40:
-        score += 0
-    elif 40 <= row['N'] <= 70:
-        score += 1
-    else:
-        score += 2
-
-    # Phosphorus
-    if row['P'] < 25:
-        score += 0
-    elif 30 <= row['P'] <= 60:
-        score += 1
-    else:
-        score += 2
-
-    # Potassium
-    if row['K'] < 85:
-        score += 0
-    elif 90 <= row['K'] <= 150:
-        score += 1
-    else:
-        score += 2
-
-    # pH
-    if 5.5 <= row['ph'] <= 7.5:
-        score += 2
-    elif 5.0 <= row['ph'] < 5.5 or 7.5 < row['ph'] <= 8.0:
-        score += 1
-    else:
-        score += 0
-
-    # Classify fertility
-    if score >= 6:
+    for col, bands in IDEAL_BANDS.items():
+        score += score_nutrient(row[col], *bands["ideal"], *bands["near"])
+    if score >= GOOD_SCORE:
         return "Good"
-    elif score >= 4:
+    if score >= MODERATE_SCORE:
         return "Moderate"
-    else:
-        return "Poor"
-    
-df['Fertility_Status'] = df.apply(fertility_status, axis=1)
-counts = df['Fertility_Status'].value_counts()
-print(counts)
-df.to_csv("Dataset\soil_data.csv")
+    return "Poor"
+
+
+def main():
+    df = pd.read_csv(config.CROP_DATA_CSV)
+    df = df[config.FEATURE_COLS].copy()
+    df[config.TARGET] = df.apply(fertility_status, axis=1)
+    counts = df[config.TARGET].value_counts()
+    print(counts)
+    df.to_csv(config.SOIL_DATA_CSV, index=False)
+    good_means = df.loc[df[config.TARGET] == "Good", config.FEATURE_COLS].mean()
+    print("Good-soil means:\n", good_means)
+
+
+if __name__ == "__main__":
+    main()

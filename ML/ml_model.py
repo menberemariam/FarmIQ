@@ -1,45 +1,48 @@
 import joblib
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report,f1_score,recall_score,precision_score
+from sklearn.metrics import classification_report, f1_score, recall_score, precision_score
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+
 import mlflow
+import sys
+from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import config
 
-df = pd.read_csv(r"Dataset\soil_data.csv")
+df = pd.read_csv(config.SOIL_DATA_CSV)
 
-X = df[['N','P','K','ph']]
-y = df["Fertility_Status"]
+X = df[config.FEATURE_COLS]
+y = df[config.TARGET]
 
-X_train,X_test,y_train,y_test = train_test_split(X,y,random_state=40,test_size=0.1)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=40, test_size=0.1, stratify=y
+)
 
-rf = RandomForestClassifier()
-rf.fit(X_train,y_train)
-
+rf = RandomForestClassifier(n_estimators=100, random_state=40)
+rf.fit(X_train, y_train)
 
 y_pred = rf.predict(X_test)
 
-# importances = rf.feature_importances_
-# print(y_pred)
+cv = StratifiedKFold(5, shuffle=True, random_state=40)
+cv_scores = cross_val_score(rf, X, y, cv=cv)
+print(f"5-fold CV accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std():.3f})")
 
-df_good_soil = df[df['Fertility_Status'] == 'Good']
-print(df_good_soil['P'])
-df_good_soil = df_good_soil[['N', 'P', 'K', 'ph']].mean()
-print(df_good_soil['P'])
+joblib.dump(rf, config.SOIL_MODEL_PKL)
+print(f"Model saved to {config.SOIL_MODEL_PKL}")
 
-
-joblib.dump(rf,'soil_analysis.pkl')
-
-print(classification_report(y_test,y_pred))
+print(classification_report(y_test, y_pred))
 
 metrics = {
-    'precision': precision_score(y_test,y_pred,average='macro'),
-    'recall': recall_score(y_test,y_pred,average='macro'),
-    "f1" : f1_score(y_test,y_pred,average='macro')
+    "precision": precision_score(y_test, y_pred, average="macro"),
+    "recall": recall_score(y_test, y_pred, average="macro"),
+    "f1": f1_score(y_test, y_pred, average="macro"),
+    "cv_accuracy": cv_scores.mean(),
 }
 
 mlflow.set_experiment("Soil Analysis")
 with mlflow.start_run():
-    mlflow.set_tag('model1-rf','0.0.1')
-    mlflow.sklearn.log_model(rf)
+    mlflow.set_tag("model", "random-forest-v2-corrected-labels")
+    mlflow.sklearn.log_model(rf, "model")
     mlflow.log_metrics(metrics)
