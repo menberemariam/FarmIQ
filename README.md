@@ -29,7 +29,7 @@ Live Project link: https://huggingface.co/spaces/pymit/Soil-Analysis
 - **Report history & improvement tracking**: save every prediction to SQLite per plot/field;
   re-test after a season and see real before/after deltas (N +20, P +8, pH +0.9...) and
   fertility class changes, plus a nutrient trend chart.
-- **🌐 Multilingual UI** — English, हिन्दी, தமிழ், తెలుగు (language switcher in the sidebar).
+- **🌐 Multilingual UI** — English, Amharic languages.
 - **REST API** (`/api/predict`, `/api/crops`, `/api/reports`) — ready for the React/Next.js UI.
 - Warnings when inputs fall outside the training data range (no silent extrapolation).
 - Cross-platform (`pathlib` paths), 49 unit tests.
