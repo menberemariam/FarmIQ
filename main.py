@@ -42,10 +42,10 @@ def is_out_of_training_range(N, P, K, ph):
     return warnings
 
 
-def get_llm_recommendations(analysis, api_key):
+def get_llm_recommendations(analysis, api_key, lang="en"):
     if not api_key:
         return None
-    prompt = build_prompt(analysis)
+    prompt = build_prompt(analysis, lang=lang)
     messages = [
         SystemMessage(
             content="You are a JSON API. Always respond with ONLY valid JSON. "
@@ -77,6 +77,19 @@ def top_crops(crop_rf, row):
 
 lang = st.sidebar.selectbox(t("en", "language"), options=list(LANGUAGES), format_func=lambda k: LANGUAGES[k])
 
+if lang == "am":
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap');
+        html, body, .stApp, .stApp input, .stApp button, .stApp select, .stApp textarea {
+            font-family: 'Noto Sans Ethiopic', 'Nyala', 'Kefa', sans-serif !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 st.title(t(lang, "title"))
 st.subheader(t(lang, "subtitle"))
 
@@ -104,12 +117,12 @@ if st.button(t(lang, "predict")):
     st.success(t(lang, "predicted", status=t(lang, predicted_data.lower())))
 
     analysis = analyze_soil(N, P, K, ph, crop=crop_label)
-    deterministic = recommend_soil(analysis)
+    deterministic = recommend_soil(analysis, lang=lang)
 
     api_key = os.getenv("GROQ_API_KEY")
     llm_recs = None
     try:
-        llm_recs = get_llm_recommendations(analysis, api_key)
+        llm_recs = get_llm_recommendations(analysis, api_key, lang=lang)
     except Exception:
         llm_recs = None
 
@@ -117,7 +130,7 @@ if st.button(t(lang, "predict")):
         st.info(t(lang, "api_unavailable"))
         recommendations = deterministic
     else:
-        recommendations = merge_recommendations(llm_recs, deterministic)
+        recommendations = merge_recommendations(llm_recs, deterministic, analysis=analysis, lang=lang)
 
     st.subheader(t(lang, "recommendations"))
     for rec in recommendations:

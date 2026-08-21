@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Fraunces, Inter, Noto_Sans_Ethiopic } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,6 +12,11 @@ const fraunces = Fraunces({
   subsets: ["latin"],
 });
 
+const notoSansEthiopic = Noto_Sans_Ethiopic({
+  variable: "--font-ethiopic",
+  subsets: ["ethiopic"],
+});
+
 export const metadata: Metadata = {
   title: "Soil Fertility Analyzer",
   description:
@@ -22,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${inter.variable} ${fraunces.variable} ${notoSansEthiopic.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 
 import config
 import db
+from i18n import normalize_lang
 from ML.engine import analyze_soil, available_crops, get_bands, recommend_soil
 
 
@@ -30,7 +31,7 @@ def _allowed_origins():
     local Next.js dev server. The browser blocks cross-origin reads without
     this header, so any frontend origin must be listed here.
     """
-    raw = os.getenv("API_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+    raw = os.getenv("API_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:1212,http://127.0.0.1:1212")
     return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 
@@ -58,6 +59,7 @@ class PredictRequest(BaseModel):
     temperature: float | None = Field(None, description="Air temperature °C")
     humidity: float | None = Field(None, description="Relative humidity %")
     rainfall: float | None = Field(None, description="Rainfall mm")
+    lang: str = Field("en", description="Response language: en or am")
 
 
 class ReportIn(BaseModel):
@@ -73,6 +75,7 @@ class ReportIn(BaseModel):
     humidity: float | None = None
     rainfall: float | None = None
     crops: list | None = None
+    lang: str = "en"
 
 
 SCIENTIFIC_NAMES = {
@@ -188,6 +191,11 @@ def predict(req: PredictRequest):
     if req.crop and req.crop.lower() not in available_crops():
         raise HTTPException(400, f"Unknown crop '{req.crop}'. See /api/crops")
 
+    raw_lang = (req.lang or "").strip().lower()
+    if raw_lang not in ("en", "english", "am", "amh", "am-et", "amharic", "አማርኛ"):
+        raise HTTPException(422, "lang must be one of: en, am")
+    lang = normalize_lang(req.lang)
+
     soil_rf, crop_rf = _models()
 
     soil_row = pd.DataFrame([{"N": req.N, "P": req.P, "K": req.K, "ph": req.ph}])
@@ -206,8 +214,9 @@ def predict(req: PredictRequest):
             "ideal_range": _ideal_range_string(analysis[i]),
             "solution": r["solution"],
             "source": r["source"],
+            "lang": lang,
         }
-        for i, r in enumerate(recommend_soil(analysis))
+        for i, r in enumerate(recommend_soil(analysis, lang=lang))
     ]
 
     climate = _climate_defaults()
@@ -225,6 +234,7 @@ def predict(req: PredictRequest):
     return {
         "fertility_status": fertility_status,
         "confidence": confidence,
+        "lang": lang,
         "recommendations": recommendations,
         "crops": crop_recs,
     }
@@ -257,6 +267,7 @@ def save_report(report: ReportIn):
         report.fertility_status, report.recommendations,
         crop=report.crop, temperature=report.temperature,
         humidity=report.humidity, rainfall=report.rainfall, crops=report.crops,
+        lang=normalize_lang(report.lang),
     )
     return {"id": report_id, "saved": True}
 

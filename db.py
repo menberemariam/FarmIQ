@@ -27,10 +27,13 @@ CREATE TABLE IF NOT EXISTS reports (
     rainfall REAL,
     fertility_status TEXT NOT NULL,
     recommendations TEXT NOT NULL,
-    crops TEXT
+    crops TEXT,
+    lang TEXT DEFAULT 'en'
 );
 CREATE INDEX IF NOT EXISTS idx_reports_plot ON reports (plot, created_at);
 """
+
+_COLUMN_CHECK = "SELECT COUNT(*) FROM pragma_table_info('reports') WHERE name = 'lang'"
 
 
 def _connect():
@@ -43,12 +46,18 @@ def _connect():
 def init_db():
     conn = _connect()
     conn.executescript(_SCHEMA)
+    try:
+        if conn.execute(_COLUMN_CHECK).fetchone()[0] == 0:
+            conn.execute("ALTER TABLE reports ADD COLUMN lang TEXT DEFAULT 'en'")
+    except sqlite3.OperationalError:
+        pass
     conn.commit()
     conn.close()
 
 
 def save_report(plot, N, P, K, ph, fertility_status, recommendations,
-                crop=None, temperature=None, humidity=None, rainfall=None, crops=None):
+                crop=None, temperature=None, humidity=None, rainfall=None,
+                crops=None, lang="en"):
     """Persist one real prediction. Returns the new report id."""
     init_db()
     conn = _connect()
@@ -56,8 +65,8 @@ def save_report(plot, N, P, K, ph, fertility_status, recommendations,
         cur = conn.execute(
             """INSERT INTO reports
                (plot, created_at, N, P, K, ph, crop, temperature, humidity, rainfall,
-                fertility_status, recommendations, crops)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                fertility_status, recommendations, crops, lang)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 plot.strip(),
                 datetime.now(timezone.utc).isoformat(),
@@ -67,6 +76,7 @@ def save_report(plot, N, P, K, ph, fertility_status, recommendations,
                 fertility_status,
                 json.dumps(recommendations),
                 json.dumps(crops) if crops is not None else None,
+                lang,
             ),
         )
         conn.commit()

@@ -43,6 +43,10 @@ export default function Page() {
   const [apiStatus, setApiStatus] = useState<ApiStatus>("checking");
 
   useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
     fetchCrops()
       .then((data) => setCrops(data.crops))
       .catch(() => setCrops([]));
@@ -77,6 +81,7 @@ export default function Page() {
           soil,
           crop === "generic" ? null : crop,
           climateValues,
+          lang,
         );
         setResult(response);
         setStep(2);
@@ -94,7 +99,7 @@ export default function Page() {
     setError(null);
     setRefreshingCrops(true);
     try {
-      const response = await predict(values, crop === "generic" ? null : crop, climate);
+      const response = await predict(values, crop === "generic" ? null : crop, climate, lang);
       setResult(response);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

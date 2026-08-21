@@ -4,12 +4,105 @@ Keys are English; every other language provides a real translation.
 Missing keys fall back to English.
 """
 
+import re
+import unicodedata
+
 LANGUAGES = {
     "en": "English",
     "hi": "हिन्दी (Hindi)",
     "ta": "தமிழ் (Tamil)",
     "te": "తెలుగు (Telugu)",
+    "am": "አማርኛ (Amharic)",
 }
+
+# Canonical modern Amharic orthography: historic/alternate glyph series map to
+# the forms used in contemporary Ethiopian publishing. Applied for matching,
+# storage and LLM-output normalization (never for silent user-text rewriting).
+AMHARIC_ORTHO_MAP = {
+    "ሐ": "ሀ", "ሑ": "ሁ", "ሒ": "ሂ", "ሓ": "ሃ", "ሔ": "ሄ", "ሕ": "ህ", "ሖ": "ሆ",
+    "ሠ": "ሰ", "ሡ": "ሱ", "ሢ": "ሲ", "ሣ": "ሳ", "ሤ": "ሴ", "ሥ": "ስ", "ሦ": "ሶ",
+    "ዐ": "አ", "ዑ": "ኡ", "ዒ": "ኢ", "ዓ": "አ", "ዔ": "ኤ", "ዕ": "እ", "ዖ": "ኦ",
+    "ፀ": "ጸ", "ፁ": "ጡ", "ፂ": "ጢ", "ፃ": "ጣ", "ፄ": "ጤ", "ፅ": "ጥ", "ፆ": "ጦ",
+    "ኣ": "አ",
+}
+
+AMHARIC_GEEZ = re.compile(r"[\u1200-\u137F\u1380-\u139F]")
+
+# Bilingual policy: scientific/agronomic terms always appear as
+# "አማርኛ (English, symbol)" so farmers and extension officers both understand.
+TERMS_AM = {
+    "soil": "አፈር (soil)",
+    "fertility": "ለምነት (fertility)",
+    "nitrogen": "ናይትሮጅን (Nitrogen, N)",
+    "phosphorus": "ፎስፎረስ (Phosphorus, P)",
+    "potassium": "ፖታስየም (Potassium, K)",
+    "ph": "ፒኤች (pH)",
+    "urea": "ዩሪያ (Urea, 46% N)",
+    "dap": "ዲኤፒ (DAP, 18% N – 46% P₂O₅)",
+    "nps": "ኤንፒኤስ (NPS, 19-38-7)",
+    "potassium_sulfate": "ፖታስየም ሰልፌት (Potassium sulfate, K₂SO₄)",
+    "mop": "ሙሪየት ኦፍ ፖታሽ (Muriate of Potash)",
+    "lime": "የግብርና ሎሚ (agricultural lime, CaCO₃)",
+    "sulfur": "ሰልፈር (elemental sulfur)",
+    "compost": "ኮምፖስት (compost)",
+    "manure": "የእንስሳት ፍግ (animal manure)",
+    "wood_ash": "እንጨት አመድ (wood ash)",
+    "gypsum": "ጂፕሰም (gypsum)",
+    "fertilizer": "ማዳበሪያ (fertilizer)",
+    "crop": "ሰብል (crop)",
+    "soil_test": "የአፈር ምርመራ (soil test)",
+    "laboratory": "ላቦራቶሪ (laboratory)",
+    "cover_crops": "ሽፋን ሰብሎች (cover crops)",
+    "catch_crop": "መካከለኛ ሰብል (catch crop)",
+    "chlorosis": "የቅጠል ቢጫነት (chlorosis)",
+    "eutrophication": "የውሃ ብክለት (eutrophication)",
+    "leaching": "መፍሰስ (leaching)",
+}
+
+# Well-known Amharic names for crops present in the dataset (bilingual form).
+# Crops without a common Amharic name keep the English name.
+CROP_NAMES_AM = {
+    "rice": "ሩዝ (rice)",
+    "maize": "በቆሎ (maize)",
+    "chickpea": "ሽምብራ (chickpea)",
+    "lentil": "ምስር (lentil)",
+    "coffee": "ቡና (coffee)",
+    "banana": "ሙዝ (banana)",
+    "mango": "ማንጎ (mango)",
+    "papaya": "ፓፓያ (papaya)",
+    "apple": "ፖም (apple)",
+    "orange": "ብርቱካን (orange)",
+    "pomegranate": "ሩማን (pomegranate)",
+    "watermelon": "ሃብሃብ (watermelon)",
+    "grapes": "ወይን (grapes)",
+    "cotton": "ጥጥ (cotton)",
+    "coconut": "ኮኮናት (coconut)",
+}
+
+
+def normalize_lang(raw):
+    """Map any common spelling of a language code to the canonical key.
+
+    Accepts "am", "amh", "am-ET", "አማርኛ" -> "am". Unknown -> "en".
+    """
+    if not isinstance(raw, str):
+        return "en"
+    value = raw.strip().lower()
+    if value in ("am", "amh", "am-et", "amharic", "አማርኛ"):
+        return "am"
+    return "en"
+
+
+def normalize_amharic(text):
+    """Normalize Amharic text: NFC, canonical orthography, BOM/zero-width and
+    whitespace cleanup. Applied at storage/matching boundaries."""
+    if not isinstance(text, str):
+        return text
+    text = unicodedata.normalize("NFC", text)
+    text = "".join(AMHARIC_ORTHO_MAP.get(ch, ch) for ch in text)
+    text = text.replace("\ufeff", "").replace("\u200b", "").replace("\u200c", "")
+    text = re.sub(r"[ \t]+", " ", text)
+    return text.strip()
 
 STRINGS = {
     "en": {
@@ -211,6 +304,56 @@ STRINGS = {
         "report_fertility": "సారవంతత",
         "status_change": "{old} → {new}",
         "disclaimer": "ఇవి కేవలం అంచనాలు — ఎరువులు వేయడానికి ముందు మట్టి పరీక్షా ప్రయోగశాలతో ధృవీకరించండి.",
+    },
+    "am": {
+        "title": "🌱 የአፈር ለምነት ትንበያ (Soil Fertility Predictor)",
+        "subtitle": "የአፈር ንጥረ-ነገር እሴቶችን ያስገቡ:",
+        "nitrogen": "ናይትሮጅን (Nitrogen) (ኪግ/ሄክታር)",
+        "phosphorus": "ፎስፎረስ (Phosphorus) (ኪግ/ሄክታር)",
+        "potassium": "ፖታስየም (Potassium) (ኪግ/ሄክታር)",
+        "ph": "የአፈር ፒኤች (Soil pH)",
+        "predict": "ለምነትን ይተንብዩ (Predict)",
+        "predicted": "🌿 የተተነበየው የአፈር ለምነት ሁኔታ: {status}",
+        "good": "ጥሩ (Good)",
+        "moderate": "መካከለኛ (Moderate)",
+        "poor": "ደካማ (Poor)",
+        "deficient": "ጉድለት (Deficient)",
+        "ample": "ከመጠን በላይ (Ample)",
+        "adequate": "በቂ (Adequate)",
+        "recommendations": "💡 የአፈር ማሻሻያ ምክሮች (Recommendations):",
+        "solution": "መፍትሔ (Solution)",
+        "ai_generated": "በ AI የተዘጋጀ (በአፈር መለኪያዎችዎ የተረጋገጠ)",
+        "calculated": "ከአፈር መለኪያዎችዎ የተሰላ",
+        "api_unavailable": "ℹ️ AI ኤፒአይ አይገኝም (GROQ_API_KEY ያረጋግጡ) — ከአፈር መለኪያዎችዎ የተሰሉ ምክሮች እየታዩ ነው።",
+        "out_of_range": "⚠️ {value} ከስልጠና ክልል ({lo}-{hi}) ውጭ ነው። ይህ ትንበያ ውጫዊ ግምት ነው።",
+        "language": "🌐 ቋንቋ (Language)",
+        "crop": "🌾 ዒላማ ሰብል (Target crop)",
+        "crop_generic": "የተለየ ሰብል የለም (አጠቃላይ ክልሎች)",
+        "save_report": "💾 ይህን ሪፖርት ያስቀምጡ",
+        "save_ok": "✅ ሪፖርቱ በታሪክ ውስጥ ተቀምጧል።",
+        "save_missing_plot": "ሪፖርቱን ለማስቀመጥ የማሳውን ስም ያስገቡ።",
+        "plot": "🗺️ የማሳ/መስክ ስም",
+        "history": "📚 የአፈር ሪፖርት ታሪክ",
+        "history_none": "እስካሁን የተቀመጡ ሪፖርቶች የሉም። ትንበያ ያሂዱና 'ይህን ሪፖርት ያስቀምጡ' ይጫኑ።",
+        "plot_select": "ለግምገማ ማሳ ይምረጡ:",
+        "latest": "የቅርብ ጊዜ",
+        "improvement": "📈 የመሻሻል ክትትል (የቅርብ እና የቀዳሚ ሪፖርት ንጽጽር)",
+        "no_previous": "ለዚህ ማሳ እስካሁን አንድ ሪፖርት ብቻ አለ — መሻሻል ለማየት የሚቀጥለውን የወቅት ምርመራ ያስቀምጡ።",
+        "n": "ናይትሮጅን (N)",
+        "p": "ፎስፎረስ (P)",
+        "k": "ፖታስየም (K)",
+        "trend": "ለ{plot} በሪፖርቶች ውስጥ የንጥረ-ነገር አዝማሚያ",
+        "crop_rec": "🌾 ለዚህ አፈር ሰብል ይመክሩ",
+        "crop_rec_hint": "አማራጭ የአየር ንብረት እሴቶች; መለኪያ ከሌለ ነባሪዎችን ይተዉ። ከላይ ያሉት የአፈር እሴቶች እንደገና ይጠቀማሉ።",
+        "temperature": "የሙቀት መጠን (°C)",
+        "humidity": "እርጥበት (%)",
+        "rainfall": "የዝናብ መጠን (ሚሜ)",
+        "get_crop_rec": "የሰብል ምክር ያግኙ",
+        "confidence": "እምነት",
+        "report_date": "ቀን",
+        "report_fertility": "ለምነት",
+        "status_change": "{old} → {new}",
+        "disclaimer": "እነዚህ ግምቶች ብቻ ናቸው — ማዳበሪያ ከመተግበር በፊት ሁልጊዜ ከአፈር ምርመራ ላቦራቶሪ ያረጋግጡ።",
     },
 }
 

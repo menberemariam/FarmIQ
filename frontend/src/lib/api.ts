@@ -85,10 +85,15 @@ export async function checkHealth(): Promise<boolean> {
   }
 }
 
-export function predict(values: SoilValues, crop: string | null, climate: ClimateValues): Promise<PredictResponse> {
+export function predict(
+  values: SoilValues,
+  crop: string | null,
+  climate: ClimateValues,
+  lang: string = "en",
+): Promise<PredictResponse> {
   return request<PredictResponse>("/api/predict", {
     method: "POST",
-    body: JSON.stringify({ ...values, crop, ...climate }),
+    body: JSON.stringify({ ...values, crop, ...climate, lang }),
   });
 }
 

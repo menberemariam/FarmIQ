@@ -24,7 +24,7 @@ html {
 body {
   background: var(--surface);
   color: #1c1917;
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), var(--font-ethiopic), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 

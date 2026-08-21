@@ -54,7 +54,7 @@ class TestApiPredict(unittest.TestCase):
             self.assertEqual(
                 set(rec.keys()),
                 {"element", "status", "deficit", "value", "ideal_range",
-                 "solution", "source"},
+                 "solution", "source", "lang"},
             )
             self.assertIn(rec["status"], ["deficient", "ample", "adequate"])
             self.assertIsInstance(rec["value"], float)
@@ -77,6 +77,34 @@ class TestApiPredict(unittest.TestCase):
 
     def test_predict_validation(self):
         resp = client.post("/api/predict", json={"N": -5, "P": 10, "K": 40, "ph": 5.5})
+        self.assertEqual(resp.status_code, 422)
+
+    def test_predict_amharic(self):
+        resp = client.post(
+            "/api/predict",
+            json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "crop": "rice", "lang": "am"},
+        )
+        self.assertEqual(resp.status_code, 200)
+        body = resp.json()
+        self.assertEqual(body["lang"], "am")
+        for rec in body["recommendations"]:
+            self.assertEqual(rec["lang"], "am")
+            self.assertRegex(rec["solution"], r"[\u1200-\u137F]")
+            self.assertIn(rec["status"], ["deficient", "ample", "adequate"])
+
+    def test_predict_lang_normalization(self):
+        """'am-ET' must normalize to 'am'; 'xx' must be rejected."""
+        resp = client.post(
+            "/api/predict",
+            json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "lang": "am-ET"},
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()["lang"], "am")
+
+        resp = client.post(
+            "/api/predict",
+            json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "lang": "xx"},
+        )
         self.assertEqual(resp.status_code, 422)
 
 
