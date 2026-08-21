@@ -4,3 +4,8 @@ __pycache__/
 mlruns/
 soil_reports.db
 soil_reports.db-*
+venv/
+frontend/node_modules/
+frontend/.next/
+node_modules/
+.next/
