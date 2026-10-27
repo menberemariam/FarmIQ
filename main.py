@@ -5,20 +5,21 @@ import joblib
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
-from langchain.schema import HumanMessage, SystemMessage
-from langchain_groq import ChatGroq
 
 import config
 import db
+import ethiopian_standards as ethio
 from i18n import LANGUAGES, translate as t
 from ML.engine import (
     analyze_soil,
     available_crops,
-    build_prompt,
+    build_soil_row,
+    crop_feature_row,
     merge_recommendations,
-    parse_llm_json,
     recommend_soil,
+    training_range_warnings,
 )
+from ML.llm import get_llm_recommendations
 
 load_dotenv()
 db.init_db()
@@ -26,50 +27,23 @@ db.init_db()
 
 @st.cache_resource
 def load_models():
-    soil_rf = joblib.load(config.SOIL_MODEL_PKL)
+    soil_rf = joblib.load(config.soil_model_path())
     crop_rf = joblib.load(config.CROP_MODEL_PKL)
     return soil_rf, crop_rf
 
 
 def is_out_of_training_range(N, P, K, ph):
-    warnings = []
-    for name, value in (("N", N), ("P", P), ("K", K), ("ph", ph)):
-        lo, hi = config.UI_INPUT_RANGES[name]
-        if value < lo or value > hi:
-            warnings.append(
-                t(lang, "out_of_range", value=f"{name}={value}", lo=lo, hi=hi)
-            )
-    return warnings
-
-
-def get_llm_recommendations(analysis, api_key, lang="en"):
-    if not api_key:
-        return None
-    prompt = build_prompt(analysis, lang=lang)
-    messages = [
-        SystemMessage(
-            content="You are a JSON API. Always respond with ONLY valid JSON. "
-            "No text, no explanations, no code fences."
-        ),
-        HumanMessage(content=prompt),
+    return [
+        w["message"] for w in training_range_warnings(N, P, K, ph, lang=lang)
     ]
-    llm = ChatGroq(groq_api_key=api_key, model_name="llama-3.3-70b-versatile")
-    for attempt in range(2):
-        try:
-            response = llm.invoke(messages)
-            return parse_llm_json(response.content)
-        except Exception:
-            if attempt == 0:
-                continue
-            raise
-    return None
 
 
 def top_crops(crop_rf, row):
     probs = crop_rf.predict_proba(row)[0]
     order = probs.argsort()[::-1][:3]
     return [
-        {"crop": crop_rf.classes_[i], "confidence": float(probs[i])} for i in order
+        {"crop": crop_rf.classes_[i], "confidence": round(float(probs[i]) * 100, 1)}
+        for i in order
     ]
 
 
@@ -99,12 +73,47 @@ crop = st.selectbox(
     format_func=lambda c: t(lang, "crop_generic") if c == "generic" else c.title(),
 )
 
-N = st.number_input(t(lang, "nitrogen"), min_value=0, max_value=160, value=40)
-P = st.number_input(t(lang, "phosphorus"), min_value=0, max_value=160, value=20)
-K = st.number_input(t(lang, "potassium"), min_value=0, max_value=220, value=110)
-ph = st.number_input(t(lang, "ph"), min_value=0.0, max_value=14.0, value=6.5, step=0.1)
+zone = st.selectbox(
+    t(lang, "zone"),
+    options=[""] + ethio.list_zones(),
+    format_func=lambda z: (
+        t(lang, "zone_generic") if not z else ethio.zone_display_name(z, lang)
+    ),
+)
+
+input_units = st.sidebar.radio(
+    t(lang, "units"),
+    options=["kg_ha", "lab"],
+    format_func=lambda u: t(lang, "units_kg_ha") if u == "kg_ha" else t(lang, "units_lab"),
+)
+
+if input_units == "lab":
+    N_lab = st.number_input(
+        t(lang, "nitrogen_lab"), min_value=0.0, max_value=10.0, value=1.0,
+        step=0.01, format="%.2f",
+    )
+    P_lab = st.number_input(
+        t(lang, "phosphorus_lab"), min_value=0.0, max_value=500.0, value=25.0,
+        step=0.5,
+    )
+    K_lab = st.number_input(
+        t(lang, "potassium_lab"), min_value=0.0, max_value=10.0, value=0.3,
+        step=0.01, format="%.2f",
+    )
+    N = ethio.n_pct_to_kg_ha(N_lab)
+    P = ethio.p_mgkg_to_kg_ha(P_lab)
+    K = ethio.k_cmolc_to_kg_ha(K_lab)
+    ph = st.number_input(t(lang, "ph"), min_value=0.0, max_value=14.0, value=6.5, step=0.1)
+    st.caption(t(lang, "lab_converted", factor=ethio.get_n_factor()))
+    st.caption(t(lang, "ethio_standard"))
+else:
+    N = st.number_input(t(lang, "nitrogen"), min_value=0, max_value=160, value=40)
+    P = st.number_input(t(lang, "phosphorus"), min_value=0, max_value=160, value=20)
+    K = st.number_input(t(lang, "potassium"), min_value=0, max_value=220, value=110)
+    ph = st.number_input(t(lang, "ph"), min_value=0.0, max_value=14.0, value=6.5, step=0.1)
 
 crop_label = None if crop == "generic" else crop
+zone_label = zone or None
 
 if st.button(t(lang, "predict")):
     soil_rf, crop_rf = load_models()
@@ -112,12 +121,21 @@ if st.button(t(lang, "predict")):
     for msg in is_out_of_training_range(N, P, K, ph):
         st.warning(msg)
 
-    user_input = pd.DataFrame({"N": [N], "P": [P], "K": [K], "ph": [ph]})
+    if zone_label:
+        st.caption(
+            f"{ethio.zone_display_name(zone_label, lang)} — "
+            f"{ethio.zone_info(zone_label)['constraint']}"
+        )
+
+    user_input = build_soil_row(
+        pd.DataFrame([{"N": N, "P": P, "K": K, "ph": ph, "zone": zone_label}]),
+        soil_rf,
+    )
     predicted_data = soil_rf.predict(user_input)[0]
     st.success(t(lang, "predicted", status=t(lang, predicted_data.lower())))
 
-    analysis = analyze_soil(N, P, K, ph, crop=crop_label)
-    deterministic = recommend_soil(analysis, lang=lang)
+    analysis = analyze_soil(N, P, K, ph, crop=crop_label, zone=zone_label)
+    deterministic = recommend_soil(analysis, lang=lang, zone=zone_label)
 
     api_key = os.getenv("GROQ_API_KEY")
     llm_recs = None
@@ -141,9 +159,7 @@ if st.button(t(lang, "predict")):
         else:
             st.caption(t(lang, "calculated"))
 
-    crop_recs = top_crops(
-        crop_rf, pd.DataFrame([{"N": N, "P": P, "K": K, "ph": ph}])
-    )
+    crop_recs = top_crops(crop_rf, crop_feature_row(N, P, K, ph))
 
     st.session_state["last_report"] = {
         "N": N, "P": P, "K": K, "ph": ph,
@@ -161,10 +177,15 @@ with st.sidebar.expander(t(lang, "history")):
     if "last_report" in st.session_state and plot_input.strip():
         if st.button(t(lang, "save_report")):
             rep = st.session_state["last_report"]
+            climate = st.session_state.get("climate_snapshot") or {}
             db.save_report(
                 plot_input, rep["N"], rep["P"], rep["K"], rep["ph"],
                 rep["fertility_status"], rep["recommendations"],
                 crop=rep["crop"], crops=rep["crops"],
+                temperature=climate.get("temperature"),
+                humidity=climate.get("humidity"),
+                rainfall=climate.get("rainfall"),
+                lang=lang,
             )
             st.success(t(lang, "save_ok"))
     elif "last_report" in st.session_state:
@@ -237,15 +258,21 @@ with st.expander(t(lang, "crop_rec")):
         t(lang, "rainfall"), min_value=0.0, max_value=500.0,
         value=float(crop_df["rainfall"].median()),
     )
+    # Snapshot for the sidebar save (the save block runs before this expander
+    # in the script, so it reads the values captured on the previous rerun).
+    st.session_state["climate_snapshot"] = {
+        "temperature": temperature,
+        "humidity": humidity,
+        "rainfall": rainfall,
+    }
 
     if st.button(t(lang, "get_crop_rec")):
         soil_rf, crop_rf = load_models()
-        crop_input = pd.DataFrame(
-            [{"N": N, "P": P, "K": K, "temperature": temperature,
-              "humidity": humidity, "ph": ph, "rainfall": rainfall}]
-        )[config.CROP_FEATURES]
+        crop_input = crop_feature_row(
+            N, P, K, ph, temperature=temperature, humidity=humidity, rainfall=rainfall
+        )
         for rank, rec in enumerate(top_crops(crop_rf, crop_input), start=1):
-            st.write(f"{rank}. **{rec['crop']}** — {rec['confidence'] * 100:.1f}% {t(lang, 'confidence')}")
-            st.progress(min(rec["confidence"], 1.0))
+            st.write(f"{rank}. **{rec['crop']}** — {rec['confidence']:.1f}% {t(lang, 'confidence')}")
+            st.progress(min(rec["confidence"] / 100, 1.0))
 
 st.caption(t(lang, "disclaimer"))

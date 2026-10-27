@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "updated": "2026-10-17",
+  "currency": "ETB",
+  "bag_kg": 50,
+  "price_note": "Prices reflect the heavily fluctuating 2023-2024 sub-market realities and distribution shortages, where informal open-market prices frequently crossed 10,000 ETB per quintal (100 kg = two 50 kg bags). Ranges are indicative only.",
+  "source_documents": [
+    "EthioSIS Soil Fertility Status and Fertilizer Recommendation Atlas (FDRE Ministry of Agriculture + ATA/ATI)",
+    "Integrated Soil Fertility Management (ISFM) Technical Manual (FDRE Ministry of Agriculture)",
+    "Ethiopian Fertilizer and Soil Health Roadmap (2026-2035)"
+  ],
+  "products": [
+    {
+      "id": "nps",
+      "abbr": "NPS",
+      "name": "Nitrogen-Phosphate-Sulfur",
+      "name_am": "ኤንፒኤስ",
+      "name_om": "En-Pii-Ees (NPS, 19-38-7)",
+      "label": "NPS (19% N, 38% P2O5, 7% S)",
+      "nutrients_pct": {"N": 19.0, "P": 38.0, "K": 0.0, "S": 7.25, "B": 0.0, "Zn": 0.0},
+      "nutrient_ranges_pct": {"N": [19.0, 19.0], "P": [38.0, 38.0], "S": [7.0, 7.5]},
+      "serves": ["P"],
+      "formulator": "OCP Group Morocco — blend formulated for East Africa to close the sulfur deficiencies uncovered by EthioSIS",
+      "prices": {"coop_per_bag": [4000, 5500], "market_per_bag": [7000, 9000]},
+      "application": {
+        "timing": "basal",
+        "method": "Apply at planting; broadcast with immediate soil incorporation",
+        "restrictions": [
+          "Never broadcast onto the surface without immediate incorporation — the ammonium-N component volatilizes",
+          "Do not apply during the dry season or under moisture stress; soil moisture is required to dissolve the phosphate complex"
+        ]
+      },
+      "decision_rules": [
+        "Soil test S < 20 ppm with B > 0.5 ppm (boron sufficient) → select NPS over DAP",
+        "Preferred basal P source wherever EthioSIS maps show sulfur deficiency"
+      ],
+      "target": {
+        "regions": ["Amhara highlands", "Oromia highlands", "Tigray highlands"],
+        "crops": ["Teff", "Wheat"]
+      }
+    },
+    {
+      "id": "npsb",
+      "abbr": "NPSB",
+      "name": "Nitrogen-Phosphate-Sulfur-Boron",
+      "name_am": "ኤንፒኤስቢ",
+      "name_om": "En-Pii-Ees-Bii (NPSB, 19-38-7 + Booronii)",
+      "label": "NPSB (18.5% N, 36.9% P2O5, 6.8% S, 0.4% B)",
+      "nutrients_pct": {"N": 18.5, "P": 36.9, "K": 0.0, "S": 6.825, "B": 0.405, "Zn": 0.0},
+      "nutrient_ranges_pct": {
+        "N": [18.1, 18.9],
+        "P": [36.1, 37.7],
+        "S": [6.7, 6.95],
+        "B": [0.1, 0.71]
+      },
+      "serves": ["P"],
+      "formulator": "Regional blends — base NPS (95 kg) + Borax (~4.9 kg) yields roughly 18.1N-36.1P2O5-6.7S-0.71B",
+      "prices": {"coop_per_bag": [4500, 5800], "market_per_bag": [7500, 9500]},
+      "application": {
+        "timing": "basal",
+        "method": "Strictly basal; uniform field broadcast or precise row placement",
+        "restrictions": [
+          "Micronutrient toxicity warning: high local boron concentrations cause localized seedling burn and phytotoxicity",
+          "Ensure uniform blending/broadcast — never concentrate granules at one spot"
+        ]
+      },
+      "decision_rules": [
+        "EthioSIS atlas grid marks boron deficiency (common across Amhara and Southern Ethiopian clay soils) → NPSB",
+        "B-deficient soils such as Gubalafto and Dawuro"
+      ],
+      "target": {
+        "regions": ["Gubalafto", "Dawuro", "Southern Ethiopia"],
+        "crops": ["Teff", "Wheat", "Maize", "Potatoes"]
+      }
+    },
+    {
+      "id": "urea",
+      "abbr": "Urea",
+      "name": "Urea",
+      "name_am": "ዩሪያ",
+      "name_om": "Yuuriyaa (Urea, 46% N)",
+      "label": "Urea (46% N)",
+      "nutrients_pct": {"N": 46.0, "P": 0.0, "K": 0.0, "S": 0.0, "B": 0.0, "Zn": 0.0},
+      "nutrient_ranges_pct": {"N": [46.0, 46.0]},
+      "serves": ["N"],
+      "formulator": "46% total nitrogen in amide form",
+      "prices": {"coop_per_bag": [3500, 4500], "market_per_bag": [6000, 8000]},
+      "application": {
+        "timing": "split",
+        "method": "Split application: 1/3 at planting, 2/3 at the critical vegetative phase",
+        "restrictions": [
+          "Never leave on an exposed dry soil surface — volatilization can strip up to 40% of the nitrogen within 48 hours unless incorporated by rainfall, irrigation, or soil cover",
+          "Do not apply during heavy downpours to prevent nitrate leaching",
+          "Top-dress at knee-high for maize, 30-40 days after sowing for teff"
+        ]
+      },
+      "decision_rules": [
+        "Mandatory accompaniment to basal fertilizers (NPS/NPSB) for high nitrogen-demand crops like maize and wheat"
+      ],
+      "target": {
+        "regions": ["Nationwide"],
+        "crops": ["Maize", "Teff", "Wheat", "all cereal top-dressing"]
+      }
+    },
+    {
+      "id": "dap",
+      "abbr": "DAP",
+      "name": "Di-Ammonium Phosphate",
+      "name_am": "ዲኤፒ",
+      "name_om": "Daappii (DAP, 18% N, 46% P2O5)",
+      "label": "DAP (18% N, 46% P2O5)",
+      "nutrients_pct": {"N": 18.0, "P": 46.0, "K": 0.0, "S": 0.0, "B": 0.0, "Zn": 0.0},
+      "nutrient_ranges_pct": {"N": [18.0, 18.0], "P": [46.0, 46.0]},
+      "serves": ["P"],
+      "formulator": "Di-ammonium phosphate",
+      "prices": {"coop_per_bag": [5000, 6000], "market_per_bag": [8500, 10000]},
+      "application": {
+        "timing": "basal",
+        "method": "Basal placement in the seed furrow",
+        "restrictions": [
+          "Phased out for macro-use by the MoA since 2014-2015 to prevent sulfur starvation",
+          "Only recommend when targeted soils have optimal sulfur/micronutrient counts or blended fertilizers face regional supply-chain blockages"
+        ]
+      },
+      "decision_rules": [
+        "Exception use in flooded/acidic lowland systems (e.g., Fogera rice plains, sugarcane) where alternative dynamics occur",
+        "Not for general use while NPS/NPSB supply is available"
+      ],
+      "target": {
+        "regions": ["Fogera rice plains", "lowland / flooded systems"],
+        "crops": ["Rice", "Sugarcane"]
+      }
+    },
+    {
+      "id": "blended",
+      "abbr": "NPSKB / Region Blends",
+      "name": "Region-Specific Blends (Formula 3 / Formula 5)",
+      "name_am": "የክልል ውሁዶች (NPSKB)",
+      "name_om": "En-Pii-Ees-Kii-Bii (NPSKB)",
+      "label": "Region blend (13.4% N, 26.8% P2O5, 14.1% K2O, 5.4% S, 1.7% Zn, 0.5% B)",
+      "nutrients_pct": {"N": 13.35, "P": 26.75, "K": 14.05, "S": 5.35, "B": 0.52, "Zn": 1.7},
+      "nutrient_ranges_pct": {
+        "N": [13.0, 13.7],
+        "P": [26.1, 27.4],
+        "K": [13.7, 14.4],
+        "S": [5.1, 5.6],
+        "B": [0.5, 0.54],
+        "Zn": [1.7, 1.7]
+      },
+      "serves": ["K"],
+      "formulator": "Region-specific blended formulas adding potassium (standard example: 13.7N-27.4P2O5-14.4K2O-5.1S-0.54B)",
+      "prices": {"coop_per_bag": [5000, 6500], "market_per_bag": [8500, 11000]},
+      "application": {
+        "timing": "basal",
+        "method": "Apply directly into planting furrows for deep-root stimulation",
+        "restrictions": [
+          "Avoid highly alkaline soils of the Rift Valley unless specialized acidic modifiers are present",
+          "Best placed in the furrow, not broadcast"
+        ]
+      },
+      "decision_rules": [
+        "Potassium-deficient areas where decades of heavy rainfall leached exchangeable K (Gojjam, Gamo, Sidama)",
+        "Tuber crops (potato, cassava), enset, and perennial fruits (avocado, mango) in the western and southwestern highlands"
+      ],
+      "target": {
+        "regions": ["Gojjam", "Gamo", "Sidama", "Western & Southwestern highlands"],
+        "crops": ["Potato", "Cassava", "Enset", "Avocado", "Mango"]
+      }
+    }
+  ]
+}

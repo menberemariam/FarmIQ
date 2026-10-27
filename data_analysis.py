@@ -1,13 +1,12 @@
 import pandas as pd
 
 import config
+import ethiopian_standards as ethio
 
-IDEAL_BANDS = {
-    "N": {"ideal": (40.0, 60.0), "near": (30.0, 75.0)},
-    "P": {"ideal": (15.0, 30.0), "near": (10.0, 45.0)},
-    "K": {"ideal": (60.0, 150.0), "near": (40.0, 175.0)},
-    "ph": {"ideal": (6.0, 7.0), "near": (5.5, 8.0)},
-}
+# Labeling bands (ideal/near per nutrient) follow the active fertility
+# profile: EthioSIS/ESRI lab thresholds by default (ethiopian_standards),
+# legacy generic bands when FERTILITY_PROFILE=generic.
+IDEAL_BANDS = ethio.labeling_bands(config.FERTILITY_PROFILE)
 
 # "Good" requires score >= 5/8: e.g. two nutrients in the ideal band plus
 # another near it, or one ideal plus all three near. "Moderate" >= 3/8.

@@ -4,6 +4,7 @@ import { CloudRain, Sun } from "lucide-react";
 import type { Lang } from "@/i18n/strings";
 import { t } from "@/i18n/strings";
 import type { CropMatch } from "@/lib/api";
+import SuitabilityChip from "@/components/SuitabilityChip";
 
 interface CropMatchCardProps {
   match: CropMatch;
@@ -29,9 +30,14 @@ export default function CropMatchCard({
         <h2 className="font-display mt-4 text-4xl font-semibold capitalize sm:text-5xl">
           {match.crop}
         </h2>
-        {match.scientific_name && (
-          <p className="mt-1 text-sm italic text-white/70">{match.scientific_name}</p>
-        )}
+        <div className="mt-2 flex items-center gap-3">
+          {match.scientific_name && (
+            <p className="text-sm italic text-white/70">{match.scientific_name}</p>
+          )}
+          {match.suitability && (
+            <SuitabilityChip cls={match.suitability.class} lang={lang} dark />
+          )}
+        </div>
 
         <div className="mt-6">
           <div className="flex items-center justify-between text-sm">

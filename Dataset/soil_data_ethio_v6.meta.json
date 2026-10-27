@@ -1,0 +1,54 @@
+{
+  "rows": 12000,
+  "seed": 40,
+  "dataset_sha256": "c9a346e95cbc24a6bacfd00859bcfece6afac3065991a234f874028d8b7e77fd",
+  "class_counts": {
+    "Good": 5750,
+    "Moderate": 4608,
+    "Poor": 1642
+  },
+  "zone_counts": {
+    "highland_nitisols": 3618,
+    "highland_vertisols": 3605,
+    "arid_semi_arid": 2405,
+    "rift_valley": 2372
+  },
+  "labeling": "per-row zone bands (Dataset/agroecological_zones.json)",
+  "generator": "tools/generate_zone_dataset.py",
+  "soil_type_mix": {
+    "highland_nitisols": {
+      "nitisol": 0.75,
+      "andosol": 0.15,
+      "cambisol_luvisol": 0.1
+    },
+    "highland_vertisols": {
+      "vertisol": 0.8,
+      "cambisol_luvisol": 0.2
+    },
+    "rift_valley": {
+      "cambisol_luvisol": 0.4,
+      "arenosol": 0.35,
+      "andosol": 0.25
+    },
+    "arid_semi_arid": {
+      "arenosol": 0.5,
+      "cambisol_luvisol": 0.5
+    }
+  },
+  "soil_type_counts": {
+    "cambisol_luvisol": 3266,
+    "vertisol": 2887,
+    "nitisol": 2722,
+    "arenosol": 2028,
+    "andosol": 1097
+  },
+  "schema": [
+    "N",
+    "P",
+    "K",
+    "ph",
+    "zone",
+    "soil_type",
+    "Fertility_Status"
+  ]
+}

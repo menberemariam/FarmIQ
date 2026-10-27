@@ -3,6 +3,7 @@ import tempfile
 import unittest
 import warnings
 from pathlib import Path
+from unittest import mock
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -17,6 +18,7 @@ import db  # noqa: E402
 import pandas as pd  # noqa: E402
 import api  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
+from ML.engine import analyze_soil  # noqa: E402
 
 client = TestClient(api.app)
 
@@ -26,6 +28,45 @@ class TestApiHealthAndCrops(unittest.TestCase):
         resp = client.get("/api/health")
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["status"], "ok")
+
+    def test_health_reports_model_version(self):
+        resp = client.get("/api/health")
+        body = resp.json()
+        self.assertEqual(body["models"], "loaded")
+        self.assertEqual(body["model_version"], api.MODEL_VERSION)
+
+    def test_health_degraded_when_models_unloadable(self):
+        api._models.cache_clear()
+        try:
+            with mock.patch("api.joblib.load", side_effect=OSError("missing model")):
+                resp = client.get("/api/health")
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(resp.json()["status"], "degraded")
+            self.assertEqual(resp.json()["models"], "error")
+        finally:
+            api._models.cache_clear()
+
+    def test_health_omits_llm_contract_by_default(self):
+        previous = config.LLM_TELEMETRY
+        config.LLM_TELEMETRY = False
+        try:
+            body = client.get("/api/health").json()
+            self.assertNotIn("llm_contract", body)
+        finally:
+            config.LLM_TELEMETRY = previous
+
+    def test_health_reports_llm_contract_when_enabled(self):
+        previous = config.LLM_TELEMETRY
+        config.LLM_TELEMETRY = True
+        try:
+            body = client.get("/api/health").json()
+            self.assertEqual(
+                set(body["llm_contract"]),
+                {"llm_calls", "llm_parse_failures", "llm_truncations",
+                 "llm_elements_recovered", "llm_contract_rejects"},
+            )
+        finally:
+            config.LLM_TELEMETRY = previous
 
     def test_crops_returns_22_real_bands(self):
         resp = client.get("/api/crops")
@@ -107,6 +148,83 @@ class TestApiPredict(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 422)
 
+    def test_predict_no_warnings_when_in_range(self):
+        resp = client.post("/api/predict", json={"N": 25, "P": 10, "K": 40, "ph": 5.5})
+        self.assertEqual(resp.status_code, 200)
+        body = resp.json()
+        self.assertEqual(body["warnings"], [])
+        self.assertFalse(body["llm_used"])
+        self.assertEqual(body["model_version"], api.MODEL_VERSION)
+
+    def test_predict_out_of_range_warning(self):
+        resp = client.post("/api/predict", json={"N": 155, "P": 10, "K": 40, "ph": 5.5})
+        self.assertEqual(resp.status_code, 200)
+        warnings = resp.json()["warnings"]
+        self.assertEqual(len(warnings), 1)
+        self.assertEqual(warnings[0]["field"], "N")
+        self.assertEqual(warnings[0]["value"], 155)
+        self.assertEqual(warnings[0]["range"], [0, 140])
+        self.assertIn("N=155", warnings[0]["message"])
+
+    def test_predict_out_of_range_warning_amharic(self):
+        resp = client.post(
+            "/api/predict",
+            json={"N": 155, "P": 10, "K": 40, "ph": 5.5, "lang": "am"},
+        )
+        self.assertEqual(resp.status_code, 200)
+        message = resp.json()["warnings"][0]["message"]
+        self.assertRegex(message, r"[\u1200-\u137F]")
+
+    def test_predict_llm_without_key_falls_back(self):
+        with mock.patch.dict("os.environ", {"GROQ_API_KEY": ""}):
+            resp = client.post(
+                "/api/predict",
+                json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "use_llm": True},
+            )
+        self.assertEqual(resp.status_code, 200)
+        body = resp.json()
+        self.assertFalse(body["llm_used"])
+        for rec in body["recommendations"]:
+            self.assertEqual(rec["source"], "rule-based")
+
+    def test_predict_llm_merged_when_valid(self):
+        def fake_llm(analysis, api_key, lang="en"):
+            out = {}
+            for item in analysis:
+                lo, hi = item["band"]
+                out[item["element"]] = {
+                    "status": item["status"],
+                    "solution": (
+                        f"Keep {item['element']} inside {lo}-{hi} "
+                        f"(difference {item['deficit']:.1f}) using validated inputs."
+                    ),
+                }
+            return out
+
+        with mock.patch.object(api, "get_llm_recommendations", side_effect=fake_llm):
+            resp = client.post(
+                "/api/predict",
+                json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "use_llm": True},
+            )
+        self.assertEqual(resp.status_code, 200)
+        body = resp.json()
+        self.assertTrue(body["llm_used"])
+        for rec in body["recommendations"]:
+            self.assertEqual(rec["source"], "llm")
+
+    def test_predict_llm_error_never_breaks_request(self):
+        with mock.patch.object(
+            api, "get_llm_recommendations", side_effect=RuntimeError("boom")
+        ):
+            resp = client.post(
+                "/api/predict",
+                json={"N": 25, "P": 10, "K": 40, "ph": 5.5, "use_llm": True},
+            )
+        self.assertEqual(resp.status_code, 200)
+        body = resp.json()
+        self.assertFalse(body["llm_used"])
+        self.assertEqual(len(body["recommendations"]), 4)
+
 
 class TestApiReports(unittest.TestCase):
     def setUp(self):
@@ -150,6 +268,23 @@ class TestApiReports(unittest.TestCase):
         })
         resp = client.get("/api/reports/improvement", params={"plot": "Solo"})
         self.assertEqual(resp.status_code, 404)
+
+    def test_report_validation_rejects_bad_values(self):
+        base = {
+            "plot": "Validation Field", "N": 25, "P": 10, "K": 40, "ph": 5.5,
+            "fertility_status": "Poor",
+            "recommendations": [{"element": "Nitrogen", "status": "deficient",
+                                 "deficit": 10.0, "solution": "Apply urea.", "source": "rule-based"}],
+        }
+        bad_payloads = [
+            {**base, "ph": 20},
+            {**base, "N": -1},
+            {**base, "fertility_status": "Excellent"},
+            {**base, "plot": ""},
+        ]
+        for payload in bad_payloads:
+            resp = client.post("/api/reports", json=payload)
+            self.assertEqual(resp.status_code, 422, payload)
 
 
 class TestCors(unittest.TestCase):

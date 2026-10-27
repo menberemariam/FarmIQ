@@ -1,0 +1,172 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "description": "Ethiopian crop x season advisory nitrogen targets. P/K/pH are season-independent baseline bands; only the N target changes between Meher and Belg. These are advisory targets, not measured soil observations, and must not be used as supervised training rows.",
+    "units": {
+      "N": "kg/ha",
+      "P": "kg/ha",
+      "K": "kg/ha",
+      "ph": "1:2.5 water"
+    },
+    "p_factor": 2.6,
+    "review_status": "unverified",
+    "review_note": "Compiled from the user-supplied Enhancement D seasonal matrix (2026). Verify crop/season ranges and operational notes against EIAR, regional research centers and local extension guidance before presenting them as official recommendations.",
+    "default_semantics": "N is season-specific. P/K/pH are static; the stored baseline bands are used only when no more specific variety/zone band exists.",
+    "sources": [
+      "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)"
+    ]
+  },
+  "crop_aliases": {
+    "maize": "maize",
+    "corn": "maize",
+    "wheat": "wheat",
+    "bread wheat": "wheat",
+    "teff": "teff",
+    "tef": "teff",
+    "sorghum": "sorghum",
+    "potato": "potato",
+    "irish potato": "potato",
+    "faba bean": "faba_bean",
+    "faba_bean": "faba_bean",
+    "faba": "faba_bean",
+    "broad bean": "faba_bean"
+  },
+  "season_aliases": {
+    "meher": ["meher", "main", "main rains", "main rainy season", "kiremt", "rainy", "summer"],
+    "belg": ["belg", "short rains", "short rainy season", "small rains", "spring"]
+  },
+  "seasons": {
+    "meher": {
+      "label": "Meher (main rainy season)",
+      "months": "June-September",
+      "note": "Long rainy season with sustained moisture and a longer crop growth window. Nitrogen targets are higher; split urea to reduce leaching."
+    },
+    "belg": {
+      "label": "Belg (short rains)",
+      "months": "February-May",
+      "note": "Short, erratic rains with a compressed growth window. Lower the N target to avoid excessive vegetative growth and moisture stress; P/K/pH stay unchanged."
+    }
+  },
+  "crops": {
+    "maize": {
+      "crop_label": "Maize",
+      "base_bands": {
+        "P": [45.0, 90.0],
+        "K": [300.0, 450.0],
+        "ph": [5.8, 7.0]
+      },
+      "seasons": {
+        "meher": {
+          "N": [160.0, 260.0],
+          "note": "Long-maturing hybrids (e.g. BH-660) use maximum N over 5-6 months; split urea applications."
+        },
+        "belg": {
+          "N": [100.0, 140.0],
+          "note": "Short-duration open-pollinated varieties. Higher N risks moisture-stress failure before grain filling."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    },
+    "wheat": {
+      "crop_label": "Wheat",
+      "base_bands": {
+        "P": [40.0, 85.0],
+        "K": [260.0, 400.0],
+        "ph": [5.5, 6.8]
+      },
+      "seasons": {
+        "meher": {
+          "N": [140.0, 220.0],
+          "note": "Main bread-wheat season. Split-apply urea to reduce leaching from Kiremt rains."
+        },
+        "belg": {
+          "N": [90.0, 120.0],
+          "note": "Only select highland pockets (e.g. Bale). The lower yield ceiling limits N utility."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    },
+    "teff": {
+      "crop_label": "Teff",
+      "base_bands": {
+        "P": [40.0, 75.0],
+        "K": [260.0, 390.0],
+        "ph": [5.6, 7.0]
+      },
+      "seasons": {
+        "meher": {
+          "N": [110.0, 145.0],
+          "note": "High-yielding white varieties such as Kuncho. High N during Meher rains increases lodging risk."
+        },
+        "belg": {
+          "N": [75.0, 100.0],
+          "note": "Rare, short-cycle mixed teff. Keep N low to avoid rapid vegetative drying."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    },
+    "sorghum": {
+      "crop_label": "Sorghum",
+      "base_bands": {
+        "P": [30.0, 65.0],
+        "K": [320.0, 500.0],
+        "ph": [6.2, 7.8]
+      },
+      "seasons": {
+        "meher": {
+          "N": [110.0, 160.0],
+          "note": "Long-duration varieties planted in Belg but harvested in Meher span both seasons."
+        },
+        "belg": {
+          "N": [80.0, 110.0],
+          "note": "Short-cycle varieties planted for a fast Belg turnaround in lowland zones."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    },
+    "potato": {
+      "crop_label": "Potato",
+      "base_bands": {
+        "P": [50.0, 100.0],
+        "K": [350.0, 550.0],
+        "ph": [5.5, 6.5]
+      },
+      "seasons": {
+        "meher": {
+          "N": [160.0, 260.0],
+          "note": "Heavy hilling protects top-dressed urea from leaching during intense rains."
+        },
+        "belg": {
+          "N": [110.0, 150.0],
+          "note": "Shorter tuber-initiation window; ensure basal nutrients are readily accessible."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    },
+    "faba_bean": {
+      "crop_label": "Faba bean",
+      "base_bands": {
+        "P": [40.0, 75.0],
+        "K": [240.0, 360.0],
+        "ph": [5.8, 7.2]
+      },
+      "seasons": {
+        "meher": {
+          "N": [60.0, 110.0],
+          "note": "Main grain-legume window. Rely primarily on biological nitrogen fixation; starter N only."
+        },
+        "belg": {
+          "N": [50.0, 80.0],
+          "note": "Lower humidity reduces active nodulation; keep starter N low."
+        }
+      },
+      "source": "User-supplied Enhancement D seasonal agronomic optimum matrix (2026)",
+      "review_status": "unverified"
+    }
+  }
+}

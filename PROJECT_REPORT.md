@@ -34,14 +34,20 @@ agronomy engine** (amounts derived from measured deficits and standard fertilize
 nutrient contents), an **optional LLM layer** (Groq) for natural-language advice
 that is validated against the computed deficits, a **SQLite report history** for
 season-to-season improvement tracking, and a **Stitch-style Next.js web UI** with
-a multilingual interface (English, हिन्दी, தமிழ், తెలుగు).
+a multilingual interface (English + Amharic in the UIs, with additional
+API strings in हिन्दी, தமிழ், తెలుగు).
 
 ### Current development stage
 
-**MVP / Beta.** All core features are implemented, tested (52 unit tests), and
+**MVP / Beta.** All core features are implemented, tested (255 unit tests), and
 running end-to-end. The system ships two UIs (Next.js web app and a Streamlit
 fallback) backed by a FastAPI REST API with real trained models and real data
-derived from a 2,200-row agricultural dataset.
+derived from a 2,200-row agricultural dataset. An **agent & farmer portal**
+manages farmers, their plots and per-report yield outcomes, a **simulated
+IoT pipeline** (device registry, token-authenticated ingest, live dashboard)
+streams soil readings through the same contract a physical field device will
+use, and each saved report now offers a **fertilizer cost estimate** (ETB)
+and a **printable report / browser PDF export**.
 
 ### Major achievements
 
@@ -69,9 +75,8 @@ derived from a 2,200-row agricultural dataset.
 ### Next milestones
 
 1. Field validation with a soil-testing lab partner (real ground truth).
-2. Fertilizer economics (cost-aware options) and PDF report export.
-3. Farmer user testing in a pilot region (market validation data).
-4. Deployment to Hugging Face Spaces / Vercel for public beta.
+2. Farmer user testing in a pilot region (market validation data).
+3. Deployment to Hugging Face Spaces / Vercel for public beta.
 
 ---
 
@@ -128,10 +133,10 @@ farmers verify improvement season after season.
 | 4 | AI advice that never contradicts the measurements | ✅ Done (validated LLM merge) |
 | 5 | Crop recommendation for soil + climate | ✅ Done (99.6% CV) |
 | 6 | Season-to-season improvement tracking | ✅ Done (SQLite + deltas) |
-| 7 | Multilingual UI (EN/HI/TA/TE) | ✅ Done |
+| 7 | Multilingual UI (EN + Amharic; Streamlit labels also HI/TA/TE) | ✅ Done |
 | 8 | REST API for third-party/frontend integration | ✅ Done |
 | 9 | Field validation with a lab partner | 🔜 Next milestone |
-| 10 | Fertilizer cost options + report export | 🔜 Next milestone |
+| 10 | Fertilizer cost options + report export | ✅ Done |
 
 ---
 
@@ -164,9 +169,28 @@ farmers verify improvement season after season.
 - Crop-specific nutrient bands from real dataset percentiles.
 - REST API + CORS (browser integration bug fixed and regression-tested).
 - SQLite report history with improvement deltas.
+- Agent & farmer portal: farmers, plots (size/GPS), soil-test history per
+  farmer and harvest-outcome follow-up (API + Next.js pages + demo seeder).
+- Simulated IoT pipeline: device registry + status, token-authenticated
+  reading ingest with quality flags, in-process simulator + external CLI
+  generator, live `/iot` dashboard with trend charts and per-device
+  assessments (all values labeled simulated).
 - Next.js frontend matching Stitch design spec (3-step wizard).
-- i18n for both UIs (EN/HI/TA/TE).
-- 52 unit tests, README documentation.
+- i18n for both UIs (EN + Amharic; Streamlit labels also HI/TA/TE).
+- **Phase 4 — cost, export & hardening:**
+  - Fertilizer cost estimator (`fertilizer_cost.py` + seeded
+    `fertilizer_prices` table): kg/ha amounts → product quantities with ETB
+    subtotals, clearly labeled as indicative demo prices; exposed as
+    `GET /api/reports/{id}/cost-estimate`.
+  - Report detail endpoint (`GET /api/reports/{id}`) + printable report route
+    (`/print/{reportId}`) with a Print button per report in the agent portal —
+    PDF via the browser's print-to-PDF, no new dependencies.
+  - Audit fixes on the IoT API: token auth before device lookup (401 for both
+    unknown device and wrong token — no enumeration), idempotent ingest
+    (replay returns the original id with `duplicate: true`), opt-in
+    `IOT_CONTROL_TOKEN` for the control endpoints, and a demo-run lock that
+    keeps a single writer for the demo device.
+- 255 unit tests, README documentation.
 
 ### Major Milestones Achieved
 
@@ -181,18 +205,33 @@ farmers verify improvement season after season.
 | SQLite history + deltas | Aug 2026 | `db.py`, `/api/reports/improvement` |
 | Next.js UI built + linted + built | Aug 2026 | `frontend/`, `npm run build` clean |
 | CORS integration fixed | Aug 2026 | 3 regression tests added |
+| Agent & farmer portal (Phase 1) | Sep 2026 | `api.py` `/api/farmers`, `frontend/app/agent`, `tools/seed_demo.py` |
+| Simulated IoT pipeline (Phase 2) | Sep 2026 | `iot.py`, `api.py` `/api/iot/*`, `frontend/app/iot`, `tools/iot_simulator.py` |
+| IoT → Farmer advisories (Phase 3) | Sep 2026 | `alerts.py`, `api.py` `/api/iot/alerts*`, `AlertPanel`/`SiteHeader` |
+| Fertilizer cost + printable report + IoT hardening (Phase 4) | Sep 2026 | `fertilizer_cost.py`, `api.py` `/api/reports/{id}*`, `frontend/app/print`, F1–F4 audit fixes |
 
 ### Deliverables Completed
 
 - `config.py` — single source of truth (paths, ranges, features).
-- `api.py` — FastAPI REST layer.
-- `db.py` — SQLite persistence.
+- `api.py` — FastAPI REST layer (predict, history, farmers/plots/outcomes,
+  report detail + cost estimate, IoT ingest/devices/assessment/simulation).
+- `iot.py` — IoT contract, quality validation, shared simulator
+  generator (no framework imports; used by the API and the CLI tool) and the
+  demo-run lock.
+- `db.py` — SQLite persistence (reports, farmers, plots, outcomes, IoT
+  devices/readings, fertilizer prices; in-place migration).
+- `fertilizer_cost.py` — kg/ha → product quantities × indicative ETB prices.
 - `i18n.py` + `frontend/src/i18n/strings.ts` — translations.
 - `ML/engine.py` — deterministic analysis + recommendation engine.
 - `ML/crop_bands.py` + `crop_bands.json` — real per-crop bands.
 - `ML/ml_model.py`, `ML/crop_model.py` — training pipelines with MLflow logging.
-- `frontend/` — Next.js 16 / React 19 / TypeScript / Tailwind v4 app.
-- `tests/` — 52 unit tests (stdlib unittest, no extra deps).
+- `frontend/` — Next.js 16 / React 19 / TypeScript / Tailwind v4 app
+  (3-step wizard + agent portal + IoT dashboard + printable report route +
+  shared language preference).
+- `tools/seed_demo.py` — idempotent demo seeder (farmer, plot, reports,
+  outcome, SOIL-001 device).
+- `tools/iot_simulator.py` — external CLI that sends contract readings over HTTP.
+- `tests/` — 255 unit tests (stdlib unittest, no extra deps).
 - `README.md` — full documentation incl. troubleshooting.
 
 ### Timeline Comparison (Planned vs. Actual)
@@ -224,12 +263,19 @@ Crop_recommendation.csv ──► ML/crop_model.py ──► ML/crop_recommendat
                      api.py (FastAPI) ────────────────┤
                      │  ├ /api/health   /api/crops    │
                      │  ├ /api/predict  /api/reports  │
-                     │  └ /api/reports/improvement    │
+                     │  ├ /api/farmers  /api/plots    │
+                     │  ├ /api/reports/improvement    │
+                     │  ├ /api/reports/{id}/outcome   │
+                     │  └ /api/iot/* (readings,       │
+                     │     devices, assessment,       │
+                     │     simulation)                │
                      │        │                        │
                      │   ML/engine.py (deterministic calc + LLM validation)
-                     │   db.py (SQLite history)
+                     │   iot.py (contract + quality + simulator generator)
+                     │   db.py (SQLite: reports, farmers, plots, outcomes,
+                     │          iot_devices, iot_readings)
                      ▼
-        frontend/ (Next.js, 3-step wizard)   ← CORS-enabled, 4 languages
+        frontend/ (Next.js: 3-step wizard + agent portal + IoT dashboard)
         main.py (Streamlit fallback UI)
 ```
 
@@ -245,15 +291,19 @@ Crop_recommendation.csv ──► ML/crop_model.py ──► ML/crop_recommendat
 | 6 | Scientific names + climate medians per crop | API | ✅ |
 | 7 | Report history + improvement deltas | `db.py` + UI | ✅ |
 | 8 | Out-of-range warnings (no silent extrapolation) | API/UI | ✅ |
-| 9 | Multilingual UI (EN/HI/TA/TE) | both UIs | ✅ |
+| 9 | Multilingual UI (EN + Amharic) | both UIs | ✅ |
 | 10 | REST API + CORS | `api.py` | ✅ |
 | 11 | Next.js Stitch-design UI | `frontend/` | ✅ |
 | 12 | Cross-platform paths | `config.py` | ✅ |
+| 13 | Agent & farmer portal (farmers, plots, yield outcomes) | `api.py` + `frontend/app/agent` + `tools/seed_demo.py` | ✅ |
+| 14 | Simulated IoT pipeline (contract ingest, devices, live dashboard) | `iot.py` + `api.py /api/iot/*` + `frontend/app/iot` + `tools/iot_simulator.py` | ✅ |
+| 15 | IoT → Farmer advisories: threshold alerts + bell/panel + ack, one-click Run Demo, CSV export, optional e-mail | `alerts.py` + `api.py /api/iot/alerts*` + `AlertPanel`/`SiteHeader` + `docs/` | ✅ |
+| 16 | Fertilizer cost estimate per report (indicative ETB prices, seeded `fertilizer_prices`) | `fertilizer_cost.py` + `api.py GET /api/reports/{id}/cost-estimate` | ✅ |
+| 17 | Report detail endpoint + printable report / browser PDF export | `api.py GET /api/reports/{id}` + `frontend/app/print/[reportId]` + `PrintableReport` | ✅ |
+| 18 | IoT API hardening: auth-before-lookup (no enumeration), idempotent ingest, opt-in `IOT_CONTROL_TOKEN`, demo-run lock | `iot.py` + `api.py` + 4 hardening test files | ✅ |
 
 ### Features In Progress
 
-- Fertilizer cost calculator (price-aware options).
-- PDF / printable soil report.
 - EC (salinity) and organic-carbon inputs (soil-health scope).
 
 ### Features Pending
@@ -456,14 +506,14 @@ tests as regression guard for every integration bug.
 
 | KPI | Value |
 |---|---|
-| Development progress (features) | 12/15 core features completed (~80%) |
-| Number of features completed | 12 |
+| Development progress (features) | 18/18 core features completed (100%) |
+| Number of features completed | 18 |
 | Fertility model accuracy (5-fold CV) | 96.6% |
 | Crop model accuracy (5-fold CV) | 99.6% |
-| Unit tests passing | 52 / 52 |
-| Languages supported | 4 (EN, HI, TA, TE) |
+| Unit tests passing | 255 / 255 |
+| Languages supported | 5 (EN, AM full UI; HI, TA, TE Streamlit labels) |
 | Crops supported | 22 |
-| API endpoints | 6 |
+| API endpoints | 28 |
 | Frontend build/lint | Clean |
 | Prototype completion | MVP/Beta |
 | User testing results | Not yet conducted (pilot pending) |
@@ -475,7 +525,7 @@ tests as regression guard for every integration bug.
 ## Achievements
 
 - Working AI product (models + engine + API + two UIs) in ~3 weeks.
-- 52/52 tests; deterministic engine is fully offline-capable.
+- 255/255 tests; deterministic engine is fully offline-capable.
 - Public demo on Hugging Face Spaces.
 
 ### Competitions / Certifications / Awards / Partnerships / Media Coverage / Academic Recognition

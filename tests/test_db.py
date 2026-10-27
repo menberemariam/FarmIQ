@@ -19,11 +19,13 @@ SAMPLE_CROPS = [{"crop": "rice", "confidence": 0.9}]
 class TestDb(unittest.TestCase):
     def setUp(self):
         self.tmpdir = tempfile.TemporaryDirectory()
+        self._prev_db_path = config.DB_PATH
         config.DB_PATH = Path(self.tmpdir.name) / "test_reports.db"
         db.init_db()
 
     def tearDown(self):
         db.cleanup(config.DB_PATH)
+        config.DB_PATH = self._prev_db_path
         self.tmpdir.cleanup()
 
     def test_save_and_list_round_trip(self):

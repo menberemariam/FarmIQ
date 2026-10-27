@@ -1,0 +1,775 @@
+{
+  "apple": {
+    "name_en": "Apple",
+    "name_am": "ፖም (apple)",
+    "name_om": "Appla (apple)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Sub-Afroalpine highlands (Chencha in Gamo, Emba Alaje in Tigray, Dinsho in Bale)",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 6.8}],
+      "temperature": [{"min": 10, "max": 18}],
+      "rainfall": [{"min": 800, "max": 1100}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 19, "max": 22}],
+      "rainfall": [{"min": 650, "max": 799}]
+    },
+    "N": {
+      "ph": [{"gt": 7.5}],
+      "temperature": [{"gt": 25}],
+      "rainfall": [{"lt": 500}]
+    }
+  },
+  "banana": {
+    "name_en": "Banana",
+    "name_am": "ሙዝ (banana)",
+    "name_om": "Muuzii (banana)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Arba Minch (Gamo Zone) and Southwest lowlands",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 26, "max": 32}],
+      "rainfall": [{"min": 1200, "max": 2200}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 20, "max": 25}],
+      "rainfall": [{"min": 900, "max": 1199}]
+    },
+    "N": {
+      "ph": [{"gt": 8.0}],
+      "temperature": [{"lt": 16}],
+      "rainfall": [{"lt": 700}]
+    }
+  },
+  "barley": {
+    "name_en": "Barley",
+    "name_am": "ገብስ (barley)",
+    "name_om": "Garbuu (barley)",
+    "category": "cereal",
+    "in_ml_model": false,
+    "regions": "Cool highlands (Dega) of Bale, Arsi, Shewa, and Wollo",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 10, "max": 15}],
+      "rainfall": [{"min": 700, "max": 1000}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 16, "max": 20}],
+      "rainfall": [{"min": 550, "max": 699}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"gt": 24}],
+      "rainfall": [{"lt": 400}]
+    }
+  },
+  "blackgram": {
+    "name_en": "Blackgram",
+    "name_am": "ጥቁር ማሽ (blackgram)",
+    "name_om": "Tikuuqur mashii (blackgram)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Research stations and small pockets in Western lowlands (Gambela/Benishangul)",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 25, "max": 35}],
+      "rainfall": [{"min": 600, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 20, "max": 24}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 15}],
+      "rainfall": [{"lt": 350}]
+    }
+  },
+  "chickpea": {
+    "name_en": "Chickpea",
+    "name_am": "ሽምብራ (chickpea)",
+    "name_om": "Shimbraa (chickpea)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Vertisols of Ada'a (Bishoftu), Gondar, and Gojjam as a residual moisture crop",
+    "S1": {
+      "ph": [{"min": 6.5, "max": 7.8}],
+      "temperature": [{"min": 18, "max": 26}],
+      "rainfall": [{"min": 600, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 5.8, "max": 6.4}],
+      "temperature": [{"min": 27, "max": 30}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"lt": 5.5}],
+      "temperature": [{"lt": 14}]
+    }
+  },
+  "coconut": {
+    "name_en": "Coconut",
+    "name_am": "ኮኮናት (coconut)",
+    "name_om": "Kookoonatii (coconut)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "None — Ethiopia lacks the high-humidity lowland coastal ecosystems required for commercial production",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 7.0}],
+      "temperature": [{"min": 27, "max": 35}],
+      "rainfall": [{"min": 1500, "max": 2500}]
+    },
+    "S2": {
+      "ph": [{"min": 7.1, "max": 8.0}],
+      "temperature": [{"min": 24, "max": 26}],
+      "rainfall": [{"min": 1000, "max": 1499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 20}],
+      "rainfall": [{"lt": 800}]
+    }
+  },
+  "coffee": {
+    "name_en": "Coffee (Arabica)",
+    "name_am": "ቡና (coffee)",
+    "name_om": "Buna (coffee)",
+    "category": "cash_crop",
+    "in_ml_model": true,
+    "regions": "Forest Nitisols of Keffa, Sidama, and Oromia (Jimma/Guji)",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 6.2}],
+      "temperature": [{"min": 18, "max": 22}],
+      "rainfall": [{"min": 1500, "max": 2000}]
+    },
+    "S2": {
+      "ph": [{"min": 5.0, "max": 5.4}],
+      "temperature": [{"min": 23, "max": 25}],
+      "rainfall": [{"min": 1100, "max": 1499}]
+    },
+    "N": {
+      "ph": [{"lt": 4.5}, {"gt": 7.0}],
+      "temperature": [{"gt": 28}],
+      "rainfall": [{"lt": 900}]
+    }
+  },
+  "cotton": {
+    "name_en": "Cotton",
+    "name_am": "ጥጥ (cotton)",
+    "name_om": "Burtukaana (cotton)",
+    "category": "fiber",
+    "in_ml_model": true,
+    "regions": "Awash Valley (Afar/Oromia), Humera, and Metema plain Fluvisols",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 24, "max": 32}],
+      "rainfall": [{"min": 700, "max": 1100}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 20, "max": 23}],
+      "rainfall": [{"min": 500, "max": 699}]
+    },
+    "N": {
+      "ph": [{"lt": 5.2}],
+      "temperature": [{"lt": 18}],
+      "rainfall": [{"lt": 400}]
+    }
+  },
+  "enset": {
+    "name_en": "Enset (False Banana)",
+    "name_am": "እንሰት (enset)",
+    "name_om": "Weita (enset)",
+    "category": "tuber",
+    "in_ml_model": false,
+    "regions": "Central-Southern highlands (Gurage, Wolaita, Gamo, Sidama, Keffa)",
+    "S1": {
+      "ph": [{"min": 5.6, "max": 6.6}],
+      "temperature": [{"min": 16, "max": 20}],
+      "rainfall": [{"min": 1100, "max": 1500}]
+    },
+    "S2": {
+      "ph": [{"min": 5.0, "max": 5.5}],
+      "temperature": [{"min": 21, "max": 24}],
+      "rainfall": [{"min": 900, "max": 1099}]
+    },
+    "N": {
+      "ph": [{"lt": 4.5}, {"gt": 7.5}],
+      "temperature": [{"lt": 10}, {"gt": 28}],
+      "rainfall": [{"lt": 700}]
+    }
+  },
+  "faba_bean": {
+    "name_en": "Faba Bean",
+    "name_am": "ባቄላ (faba bean)",
+    "name_om": "Baaqelaa (faba bean)",
+    "category": "pulse",
+    "in_ml_model": false,
+    "regions": "High-rainfall highlands of Amhara, Oromia, and Southern regions",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.2}],
+      "temperature": [{"min": 14, "max": 18}],
+      "rainfall": [{"min": 700, "max": 1100}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 19, "max": 22}],
+      "rainfall": [{"min": 550, "max": 699}]
+    },
+    "N": {
+      "ph": [{"lt": 5.2}],
+      "temperature": [{"gt": 26}],
+      "rainfall": [{"lt": 400}]
+    }
+  },
+  "garlic": {
+    "name_en": "Garlic",
+    "name_am": "ነጭ ሽንኩርት (garlic)",
+    "name_om": "Qololee adii (garlic)",
+    "category": "vegetable",
+    "in_ml_model": false,
+    "regions": "Highlands of East Gojjam, North Shewa, and Bale",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 12, "max": 18}],
+      "rainfall": [{"min": 600, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 19, "max": 23}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"gt": 7.8}],
+      "temperature": [{"gt": 28}]
+    }
+  },
+  "grapes": {
+    "name_en": "Grapes",
+    "name_am": "ወይን (grapes)",
+    "name_om": "Weyinii (grapes)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Sandy-loam soils of Ziway (Oromia) and Gidami/Dogu'a Tembien (Tigray)",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 18, "max": 25}],
+      "rainfall": [{"min": 500, "max": 800}]
+    },
+    "S2": {
+      "ph": [{"min": 7.1, "max": 7.8}],
+      "temperature": [{"min": 26, "max": 30}],
+      "rainfall": [{"min": 400, "max": 499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.2}],
+      "temperature": [{"lt": 12}, {"gt": 35}],
+      "rainfall": [{"gt": 1100}]
+    }
+  },
+  "jute": {
+    "name_en": "Jute",
+    "name_am": "዁ት (jute)",
+    "name_om": "Qudaa (jute)",
+    "category": "fiber",
+    "in_ml_model": true,
+    "regions": "High-rainfall river basins of South-Western lowlands (Gambela, Ilu Ababor floodplains)",
+    "S1": {
+      "ph": [{"min": 6.2, "max": 7.2}],
+      "temperature": [{"min": 24, "max": 35}],
+      "rainfall": [{"min": 1200, "max": 1800}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 6.1}],
+      "temperature": [{"min": 20, "max": 23}],
+      "rainfall": [{"min": 900, "max": 1199}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 16}],
+      "rainfall": [{"lt": 600}]
+    }
+  },
+  "kidneybeans": {
+    "name_en": "Kidney Bean",
+    "name_am": "ሀረግ ቦሎቄ (kidney bean)",
+    "name_om": "Bulgaa (kidney bean)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Central Rift Valley (Ziway, Hawassa), Central Oromia",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 6.8}],
+      "temperature": [{"min": 18, "max": 24}],
+      "rainfall": [{"min": 600, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 25, "max": 29}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"gt": 32}],
+      "rainfall": [{"lt": 350}, {"gt": 1200}]
+    }
+  },
+  "khat": {
+    "name_en": "Khat",
+    "name_am": "ጫት (khat)",
+    "name_om": "Jimaa (khat)",
+    "category": "stimulant",
+    "in_ml_model": false,
+    "regions": "Mid-land hillsides of Eastern Hararghe, Sidama, and Gurage",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.2}],
+      "temperature": [{"min": 18, "max": 24}],
+      "rainfall": [{"min": 800, "max": 1200}]
+    },
+    "S2": {
+      "ph": [{"min": 5.2, "max": 5.9}],
+      "temperature": [{"min": 25, "max": 28}],
+      "rainfall": [{"min": 600, "max": 799}]
+    },
+    "N": {
+      "ph": [{"lt": 4.8}],
+      "rainfall": [{"lt": 400}]
+    }
+  },
+  "lentil": {
+    "name_en": "Lentil",
+    "name_am": "ምስር (lentil)",
+    "name_om": "Misirii (lentil)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Vertisols of Akaki, Ada'a (Bishoftu), and parts of Amhara highlands",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 14, "max": 20}],
+      "rainfall": [{"min": 550, "max": 850}]
+    },
+    "S2": {
+      "ph": [{"min": 5.6, "max": 5.9}],
+      "temperature": [{"min": 21, "max": 25}],
+      "rainfall": [{"min": 400, "max": 549}]
+    },
+    "N": {
+      "ph": [{"lt": 5.3}, {"gt": 8.0}],
+      "temperature": [{"gt": 28}],
+      "rainfall": [{"lt": 300}]
+    }
+  },
+  "maize": {
+    "name_en": "Maize",
+    "name_am": "በቆሎ (maize)",
+    "name_om": "Boqqolloon (maize)",
+    "category": "cereal",
+    "in_ml_model": true,
+    "regions": "Deep Nitisols of Bako, Jimma, and Western Amhara",
+    "S1": {
+      "ph": [{"min": 5.8, "max": 7.0}],
+      "temperature": [{"min": 18, "max": 25}],
+      "rainfall": [{"min": 800, "max": 1200}]
+    },
+    "S2": {
+      "ph": [{"min": 5.0, "max": 5.7}],
+      "temperature": [{"min": 26, "max": 30}],
+      "rainfall": [{"min": 600, "max": 799}]
+    },
+    "N": {
+      "ph": [{"lt": 4.8}],
+      "temperature": [{"gt": 35}],
+      "rainfall": [{"lt": 500}]
+    }
+  },
+  "mango": {
+    "name_en": "Mango",
+    "name_am": "ማንጎ (mango)",
+    "name_om": "Maangoo (mango)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Upper Awash Valley, Hararghe lowlands, Humera",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 7.2}],
+      "temperature": [{"min": 24, "max": 30}],
+      "rainfall": [{"min": 800, "max": 1200}]
+    },
+    "S2": {
+      "ph": [{"min": 7.3, "max": 7.8}],
+      "temperature": [{"min": 20, "max": 23}],
+      "rainfall": [{"min": 600, "max": 799}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 15}],
+      "rainfall": [{"lt": 400}]
+    }
+  },
+  "mothbeans": {
+    "name_en": "Mothbean",
+    "name_am": "ሞዝቢን (mothbean)",
+    "name_om": "Mojbiinii (mothbean)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Extremely arid zones of Afar and lower Tigray/Amhara borders",
+    "S1": {
+      "ph": [{"min": 6.5, "max": 8.0}],
+      "temperature": [{"min": 28, "max": 38}],
+      "rainfall": [{"min": 250, "max": 500}]
+    },
+    "S2": {
+      "ph": [{"min": 6.0, "max": 6.4}],
+      "temperature": [{"min": 22, "max": 27}],
+      "rainfall": [{"min": 200, "max": 249}]
+    },
+    "N": {
+      "ph": [{"lt": 5.5}],
+      "temperature": [{"lt": 18}],
+      "rainfall": [{"gt": 800}]
+    }
+  },
+  "mungbean": {
+    "name_en": "Mungbean",
+    "name_am": "ማሽምሽ (mungbean)",
+    "name_om": "Mashimashii (mungbean)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Lowlands of North Shewa (Seken, Robit), South Wollo, and Humera",
+    "S1": {
+      "ph": [{"min": 6.2, "max": 7.2}],
+      "temperature": [{"min": 25, "max": 32}],
+      "rainfall": [{"min": 450, "max": 700}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 6.1}],
+      "temperature": [{"min": 20, "max": 24}],
+      "rainfall": [{"min": 350, "max": 449}]
+    },
+    "N": {
+      "ph": [{"lt": 5.2}],
+      "temperature": [{"lt": 18}],
+      "rainfall": [{"gt": 1000}]
+    }
+  },
+  "muskmelon": {
+    "name_en": "Muskmelon (Cantaloupe)",
+    "name_am": "የፈረንጅ ሃብሃብ (muskmelon)",
+    "name_om": "Qarcamii (muskmelon)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Warm Central Rift Valley sands",
+    "S1": {
+      "ph": [{"min": 6.2, "max": 7.0}],
+      "temperature": [{"min": 24, "max": 32}],
+      "rainfall": [{"min": 400, "max": 600}]
+    },
+    "S2": {
+      "ph": [{"min": 5.6, "max": 6.1}],
+      "temperature": [{"min": 19, "max": 23}],
+      "rainfall": [{"min": 300, "max": 399}]
+    },
+    "N": {
+      "ph": [{"lt": 5.3}],
+      "temperature": [{"lt": 16}]
+    }
+  },
+  "onion": {
+    "name_en": "Onion",
+    "name_am": "ሽንኩርት (onion)",
+    "name_om": "Qolee (onion)",
+    "category": "vegetable",
+    "in_ml_model": false,
+    "regions": "Central Rift Valley (Meki, Ziway) using Fluvisol irrigation",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 15, "max": 24}],
+      "rainfall": [{"min": 700, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 7.1, "max": 7.8}],
+      "temperature": [{"min": 25, "max": 28}],
+      "rainfall": [{"min": 500, "max": 699}]
+    },
+    "N": {
+      "ph": [{"lt": 5.5}, {"gt": 8.2}],
+      "temperature": [{"gt": 32}],
+      "rainfall": [{"gt": 1200}]
+    }
+  },
+  "orange": {
+    "name_en": "Orange (Citrus)",
+    "name_am": "ብርቱካን (orange)",
+    "name_om": "Roodhii (orange)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Upper Awash (Melka Werer), parts of Oromia",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 20, "max": 28}],
+      "rainfall": [{"min": 900, "max": 1300}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}, {"min": 7.1, "max": 7.8}],
+      "temperature": [{"min": 29, "max": 33}],
+      "rainfall": [{"min": 700, "max": 899}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}, {"gt": 8.2}],
+      "temperature": [{"lt": 12}],
+      "rainfall": [{"lt": 500}]
+    }
+  },
+  "papaya": {
+    "name_en": "Papaya",
+    "name_am": "ፓፓያ (papaya)",
+    "name_om": "Papaiyaa (papaya)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Melka Werer, Arba Minch, and Rift Valley alluvial zones",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 6.5}],
+      "temperature": [{"min": 22, "max": 28}],
+      "rainfall": [{"min": 1000, "max": 1500}]
+    },
+    "S2": {
+      "ph": [{"min": 6.6, "max": 7.5}],
+      "temperature": [{"min": 18, "max": 21}],
+      "rainfall": [{"min": 750, "max": 999}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 12}]
+    }
+  },
+  "pigeonpeas": {
+    "name_en": "Pigeonpea",
+    "name_am": "የእርግብ አተር (pigeonpea)",
+    "name_om": "Baqrii (pigeonpea)",
+    "category": "pulse",
+    "in_ml_model": true,
+    "regions": "Semi-arid parts of Southern Ethiopia (Konso, Gamo) and Oromia lowlands",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 7.5}],
+      "temperature": [{"min": 22, "max": 30}],
+      "rainfall": [{"min": 600, "max": 1000}]
+    },
+    "S2": {
+      "ph": [{"min": 5.0, "max": 5.4}],
+      "temperature": [{"min": 18, "max": 21}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"lt": 4.8}],
+      "temperature": [{"lt": 15}]
+    }
+  },
+  "pomegranate": {
+    "name_en": "Pomegranate",
+    "name_am": "ሩማን (pomegranate)",
+    "name_om": "Romanii (pomegranate)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Arid/semi-arid areas with alkaline tendencies — Eastern Hararghe, Dire Dawa, southern lowlands",
+    "S1": {
+      "ph": [{"min": 6.5, "max": 7.5}],
+      "temperature": [{"min": 25, "max": 35}],
+      "rainfall": [{"min": 500, "max": 800}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 6.4}],
+      "temperature": [{"min": 18, "max": 24}],
+      "rainfall": [{"min": 350, "max": 499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "rainfall": [{"gt": 1200}]
+    }
+  },
+  "potato": {
+    "name_en": "Potato",
+    "name_am": "ድንች (potato)",
+    "name_om": "Dinicha (potato)",
+    "category": "tuber",
+    "in_ml_model": false,
+    "regions": "Loose sandy-loam soils of Awi Zone (Gojjam), Welmera, and Chencha",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 6.5}],
+      "temperature": [{"min": 15, "max": 20}],
+      "rainfall": [{"min": 600, "max": 1000}]
+    },
+    "S2": {
+      "ph": [{"min": 5.0, "max": 5.4}],
+      "temperature": [{"min": 21, "max": 24}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"gt": 7.5}],
+      "temperature": [{"gt": 27}]
+    }
+  },
+  "rice": {
+    "name_en": "Rice",
+    "name_am": "ሩዝ (rice)",
+    "name_om": "Ruusii (rice)",
+    "category": "cereal",
+    "in_ml_model": true,
+    "regions": "Fogera plains (Gondar), Gambela floodplains, and Chefa Wetland (Wollo)",
+    "S1": {
+      "ph": [{"min": 5.5, "max": 6.5}],
+      "temperature": [{"min": 22, "max": 30}],
+      "rainfall": [{"min": 1100, "max": 1600}]
+    },
+    "S2": {
+      "ph": [{"min": 6.6, "max": 7.3}],
+      "temperature": [{"min": 18, "max": 21}],
+      "rainfall": [{"min": 900, "max": 1099}]
+    },
+    "N": {
+      "ph": [{"lt": 4.5}, {"gt": 8.0}],
+      "temperature": [{"lt": 15}],
+      "rainfall": [{"lt": 700}]
+    }
+  },
+  "sesame": {
+    "name_en": "Sesame",
+    "name_am": "ሰሊጥ (sesame)",
+    "name_om": "Simsim (sesame)",
+    "category": "oilseed",
+    "in_ml_model": false,
+    "regions": "Well-drained fertile lowlands of Humera, Metema, and Benishangul-Gumuz",
+    "S1": {
+      "ph": [{"min": 6.5, "max": 7.5}],
+      "temperature": [{"min": 26, "max": 35}],
+      "rainfall": [{"min": 500, "max": 700}]
+    },
+    "S2": {
+      "ph": [{"min": 6.0, "max": 6.4}],
+      "temperature": [{"min": 22, "max": 25}],
+      "rainfall": [{"min": 400, "max": 499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.5}],
+      "temperature": [{"lt": 20}],
+      "rainfall": [{"gt": 1000}]
+    }
+  },
+  "sorghum": {
+    "name_en": "Sorghum",
+    "name_am": "ማሽላ (sorghum)",
+    "name_om": "Misingaa (sorghum)",
+    "category": "cereal",
+    "in_ml_model": false,
+    "regions": "Lowlands and dry mid-lands of Eastern Hararghe, Tigray, and North Wollo",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 22, "max": 30}],
+      "rainfall": [{"min": 500, "max": 800}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 18, "max": 21}],
+      "rainfall": [{"min": 400, "max": 499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 15}],
+      "rainfall": [{"lt": 300}]
+    }
+  },
+  "teff": {
+    "name_en": "Teff",
+    "name_am": "ትፍ (teff)",
+    "name_om": "Xaafii (teff)",
+    "category": "cereal",
+    "in_ml_model": false,
+    "regions": "Vertisols of Central Oromia, Amhara highlands",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.5}],
+      "temperature": [{"min": 15, "max": 22}],
+      "rainfall": [{"min": 750, "max": 1000}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 23, "max": 27}],
+      "rainfall": [{"min": 600, "max": 749}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}, {"gt": 8.0}],
+      "temperature": [{"gt": 30}],
+      "rainfall": [{"lt": 450}]
+    }
+  },
+  "tomato": {
+    "name_en": "Tomato",
+    "name_am": "ቲማቲም (tomato)",
+    "name_om": "Tamattimii (tomato)",
+    "category": "vegetable",
+    "in_ml_model": false,
+    "regions": "Central Rift Valley (Meki, Ziway) and Awash basin valleys",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 6.8}],
+      "temperature": [{"min": 20, "max": 27}],
+      "rainfall": [{"min": 500, "max": 700}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}, {"min": 6.9, "max": 7.5}],
+      "temperature": [{"min": 16, "max": 19}],
+      "rainfall": [{"min": 400, "max": 499}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 10}, {"gt": 35}]
+    }
+  },
+  "watermelon": {
+    "name_en": "Watermelon",
+    "name_am": "ሃብሃብ (watermelon)",
+    "name_om": "Dhaddacha bishaan (watermelon)",
+    "category": "fruit",
+    "in_ml_model": true,
+    "regions": "Sandy banks of the Awash River, Koka, and Meki",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 6.8}],
+      "temperature": [{"min": 25, "max": 35}],
+      "rainfall": [{"min": 400, "max": 600}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}, {"min": 7.0, "max": 7.5}],
+      "temperature": [{"min": 20, "max": 24}],
+      "rainfall": [{"min": 300, "max": 399}]
+    },
+    "N": {
+      "ph": [{"lt": 5.0}],
+      "temperature": [{"lt": 15}],
+      "rainfall": [{"gt": 1000}]
+    }
+  },
+  "wheat": {
+    "name_en": "Wheat",
+    "name_am": "ስንዴ (wheat)",
+    "name_om": "Qamadii (wheat)",
+    "category": "cereal",
+    "in_ml_model": false,
+    "regions": "Bale, Arsi, and West Gojjam; winter river irrigation in Afar and Oromia lowlands",
+    "S1": {
+      "ph": [{"min": 6.0, "max": 7.0}],
+      "temperature": [{"min": 15, "max": 22}],
+      "rainfall": [{"min": 600, "max": 900}]
+    },
+    "S2": {
+      "ph": [{"min": 5.5, "max": 5.9}],
+      "temperature": [{"min": 23, "max": 26}],
+      "rainfall": [{"min": 450, "max": 599}]
+    },
+    "N": {
+      "ph": [{"lt": 5.2}],
+      "temperature": [{"gt": 30}],
+      "rainfall": [{"lt": 350}]
+    }
+  }
+}

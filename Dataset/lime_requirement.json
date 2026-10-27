@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "description": "Ethiopian Lime Requirement Factors (LRF) by soil type. LRF is the metric tons of pure agricultural lime (CaCO3) at 90% ECCE needed to raise soil pH by 1.0 unit across 1 hectare at a standard 20 cm plow depth. Amounts here extend the deterministic recommendation engine; when no soil type is given the legacy generic formula (4.0 t/ha per pH unit, cap 10) still applies unchanged.",
+    "ecce_pct": 90,
+    "plow_depth_cm": 20,
+    "max_single_application_t_ha": 5.0,
+    "dolomitic_factor": 0.84,
+    "target_ph_cap": 6.5,
+    "sources": [
+      "EIAR Acid Soil Management Guidelines / Holetta Research Center",
+      "Debre Zeit Agricultural Research Center (DZARC)",
+      "Haramaya University Soil Science Department",
+      "Ethiopian Soil Information System (EthioSIS)",
+      "Melkassa Agricultural Research Center (MARC)"
+    ]
+  },
+  "soil_types": {
+    "nitisol": {
+      "name_en": "Nitisols",
+      "name_am": "ኖይቲሶሎች",
+      "name_om": "Nitisolii",
+      "lrf": 4.2,
+      "buffering": "very_high",
+      "buffering_note": "Strongly buffered by Al/Fe oxides",
+      "areas": ["Jimma", "Kaffa", "Bench-Maji", "Gedeo"],
+      "source": "EIAR Acid Soil Management Guidelines / Holetta Research Center; JARC profiling"
+    },
+    "vertisol": {
+      "name_en": "Vertisols",
+      "name_am": "ቬርቲሶሎች",
+      "name_om": "Vertisolii",
+      "lrf": 5.5,
+      "buffering": "extreme",
+      "buffering_note": "Highly buffered by smectite/montmorillonite clay",
+      "areas": ["Central Highlands", "Ada'a", "Becho plains"],
+      "source": "Debre Zeit Agricultural Research Center (DZARC); ILRI Vertisol Management Series"
+    },
+    "cambisol_luvisol": {
+      "name_en": "Cambisols / Luvisols",
+      "name_am": "ካምቢሶሎች / ሉቪሶሎች",
+      "name_om": "Cambisolii / Luvisolii",
+      "aliases": ["cambisol", "cambisols", "luvisol", "luvisols"],
+      "lrf": 2.8,
+      "buffering": "moderate",
+      "buffering_note": "Medium-textured mixed highland terrains",
+      "areas": ["Medium-textured highland terrains"],
+      "source": "Haramaya University Soil Science Department"
+    },
+    "andosol": {
+      "name_en": "Andosols",
+      "name_am": "አንዶሶሎች",
+      "name_om": "Andosolii",
+      "lrf": 3.5,
+      "buffering": "high",
+      "buffering_note": "Buffered by organic complexes and allophane",
+      "areas": ["Volcanic highland pockets", "Parts of Arsi/Bale"],
+      "source": "Ethiopian Soil Information System (EthioSIS)"
+    },
+    "arenosol": {
+      "name_en": "Arenosols (sandy soils)",
+      "name_am": "አሬኖሶሎች (አሸዋማ አፈር)",
+      "name_om": "Arenosolii (biqiltaa awuuffaa)",
+      "aliases": ["sandy", "sandy_soil", "sandy_soils"],
+      "lrf": 1.2,
+      "buffering": "very_low",
+      "buffering_note": "Poorly buffered sandy soils",
+      "areas": ["Select Rift Valley alluvial fields"],
+      "source": "Melkassa Agricultural Research Center (MARC)"
+    }
+  },
+  "zone_soil_defaults": {
+    "highland_nitisols": "nitisol",
+    "highland_vertisols": "vertisol",
+    "rift_valley": "cambisol_luvisol",
+    "arid_semi_arid": "arenosol"
+  }
+}

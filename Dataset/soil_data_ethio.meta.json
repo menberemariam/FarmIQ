@@ -1,0 +1,18 @@
+{
+  "rows": 12000,
+  "seed": 40,
+  "dataset_sha256": "09fd8828e1dec736b66fce2af2675452c7811b85576b6066cde9a81290e9f35f",
+  "class_counts": {
+    "Good": 5659,
+    "Moderate": 4760,
+    "Poor": 1581
+  },
+  "zone_counts": {
+    "highland_nitisols": 3578,
+    "highland_vertisols": 3503,
+    "arid_semi_arid": 2485,
+    "rift_valley": 2434
+  },
+  "labeling": "per-row zone bands (Dataset/agroecological_zones.json)",
+  "generator": "tools/generate_zone_dataset.py"
+}

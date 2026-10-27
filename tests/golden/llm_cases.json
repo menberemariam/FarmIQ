@@ -1,0 +1,1719 @@
+{
+  "version": 1,
+  "purpose": "evaluation_only",
+  "not_training": true,
+  "built": "2026-10-22",
+  "description": "Golden evaluation set for the LLM advisory pipeline. Never export to Dataset/*.csv and never attach training labels.",
+  "counts": {
+    "elements_evaluated": 200,
+    "by_status": {
+      "adequate": 81,
+      "ample": 18,
+      "deficient": 101
+    },
+    "edge_cases": 9,
+    "stress_cases": 5,
+    "generated_cases": 45
+  },
+  "cases": [
+    {
+      "id": "stress_acidic_nitisol_wheat",
+      "kind": "stress",
+      "tags": [
+        "acidic",
+        "nitisol",
+        "wheat",
+        "lime_first",
+        "edge"
+      ],
+      "input": {
+        "N": 140,
+        "P": 5,
+        "K": 350,
+        "ph": 4.8,
+        "crop": "wheat",
+        "zone": "highland_nitisols",
+        "soil_type": "nitisol"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {
+          "pH": [
+            "lime",
+            "first"
+          ],
+          "Phosphorus": [
+            "pH below 5",
+            "efficiency"
+          ]
+        },
+        "must_not_include": {},
+        "numbers": {
+          "pH": [
+            2.94
+          ]
+        }
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Enhancement 4 stress case; expectations pinned to this repo's EthioSIS/EIAR bands and zone overrides",
+      "rationale": "Strongly acidic Nitisol. The repo pins pH 5.5-6.5 and the LRF yields 2.94 t/ha lime (not the paste's 4-5 t/ha); applied P is scaled by the 0.4 fixation factor.",
+      "gate": true
+    },
+    {
+      "id": "stress_high_k_rift_onion",
+      "kind": "stress",
+      "tags": [
+        "high_k",
+        "rift_valley",
+        "onion",
+        "micronutrient_lockout"
+      ],
+      "input": {
+        "N": 150,
+        "P": 40,
+        "K": 950,
+        "ph": 7.8,
+        "crop": "onion",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "ample",
+          "pH": "adequate"
+        },
+        "must_include": {
+          "Phosphorus": [
+            "NPSZnB"
+          ]
+        },
+        "must_not_include": {
+          "Potassium": [
+            "Apply maintenance doses"
+          ]
+        },
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Enhancement 4 stress case; expectations pinned to this repo's EthioSIS/EIAR bands and zone overrides",
+      "rationale": "Rift Valley K band is 400-900 kg/ha, so 950 (not the paste's 850) is the ample case. pH 7.8 crosses the 7.5 Zn/B lockout threshold, so the P advice must switch to NPSZnB and K must not get a maintenance dose.",
+      "gate": true
+    },
+    {
+      "id": "stress_teff_lodging_boundary",
+      "kind": "stress",
+      "tags": [
+        "teff",
+        "lodging",
+        "edge"
+      ],
+      "input": {
+        "N": 125,
+        "P": 50,
+        "K": 300,
+        "ph": 6.2,
+        "crop": "teff"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "ample",
+          "Phosphorus": "deficient",
+          "Potassium": "ample",
+          "pH": "deficient"
+        },
+        "must_include": {
+          "Nitrogen": [
+            "Do not add more nitrogen"
+          ]
+        },
+        "must_not_include": {
+          "Nitrogen": [
+            "Apply urea"
+          ]
+        },
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Enhancement 4 stress case; expectations pinned to this repo's EthioSIS/EIAR bands and zone overrides",
+      "rationale": "Generic N band is 60-100 kg/ha, so 125 is ample in this repo (the paste assumed 'adequate'). The safety property under test is that no cereal-booster nitrogen is prescribed.",
+      "gate": true
+    },
+    {
+      "id": "stress_vertisol_chickpea_legume_gap",
+      "kind": "stress",
+      "tags": [
+        "vertisol",
+        "chickpea",
+        "legume",
+        "known_gap"
+      ],
+      "input": {
+        "N": 80,
+        "P": 45,
+        "K": 400,
+        "ph": 6.8,
+        "crop": "chickpea",
+        "zone": "highland_vertisols",
+        "soil_type": "vertisol"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Enhancement 4 stress case; expectations pinned to this repo's EthioSIS/EIAR bands and zone overrides",
+      "rationale": "Vertisol N band is 150-300 kg/ha, so N=80 is deficient and the engine currently recommends urea. The repo has no legume / nodulation template yet; this case records the gap without gating on advisory text that does not exist.",
+      "gate": true,
+      "known_gaps": [
+        "legume_n_fixation"
+      ]
+    },
+    {
+      "id": "stress_alkaline_rift_maize",
+      "kind": "stress",
+      "tags": [
+        "alkaline",
+        "rift_valley",
+        "maize",
+        "micronutrient_lockout"
+      ],
+      "input": {
+        "N": 180,
+        "P": 20,
+        "K": 500,
+        "ph": 8.4,
+        "crop": "maize",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "ample"
+        },
+        "must_include": {
+          "Phosphorus": [
+            "NPSZnB"
+          ]
+        },
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Enhancement 4 stress case; expectations pinned to this repo's EthioSIS/EIAR bands and zone overrides",
+      "rationale": "pH 8.4 is above the Rift Valley 7.5 threshold; the P advice must name the NPSZnB blend rather than plain NPS/DAP.",
+      "gate": true
+    },
+    {
+      "id": "gen_01_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 410.0,
+        "ph": 6.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_02_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 110.5,
+        "P": 33.15,
+        "K": 221.0,
+        "ph": 6.0,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_03_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 24.75,
+        "K": 525.0,
+        "ph": 5.0,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_04_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 85.0,
+        "P": 67.5,
+        "K": 325.0,
+        "ph": 7.25,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_05_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 120.0,
+        "P": 20.5,
+        "K": 800.0,
+        "ph": 8.0,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_06_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 130.0,
+        "P": 58.5,
+        "K": 390.0,
+        "ph": 6.0,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley (band_edge); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_07_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 24.75,
+        "K": 752.5,
+        "ph": 5.0,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_08_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 215.0,
+        "P": 38.25,
+        "K": 650.0,
+        "ph": 9.0,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "ample",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_09_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 40.0,
+        "K": 800.0,
+        "ph": 6.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_10_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 195.0,
+        "P": 58.5,
+        "K": 221.0,
+        "ph": 6.0,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_11_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 24.75,
+        "K": 297.5,
+        "ph": 8.8,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_12_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 99.5,
+        "P": 38.25,
+        "K": 325.0,
+        "ph": 5.5,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame (deficit_0.5); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_13_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 410.0,
+        "ph": 8.0,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_14_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 110.5,
+        "P": 33.15,
+        "K": 390.0,
+        "ph": 4.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_15_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 47.5,
+        "K": 297.5,
+        "ph": 6.9,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_16_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 150.0,
+        "P": 38.25,
+        "K": 650.0,
+        "ph": 7.25,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_17_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 120.0,
+        "P": 40.0,
+        "K": 800.0,
+        "ph": 8.0,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_18_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 130.0,
+        "P": 33.15,
+        "K": 559.0,
+        "ph": 4.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "ample",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley (band_edge); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_19_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 322.5,
+        "P": 24.75,
+        "K": 525.0,
+        "ph": 8.8,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "ample",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_20_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 85.0,
+        "P": 67.5,
+        "K": 650.0,
+        "ph": 5.5,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_21_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 120.0,
+        "P": 40.0,
+        "K": 410.0,
+        "ph": 8.0,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_22_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 110.5,
+        "P": 33.15,
+        "K": 221.0,
+        "ph": 7.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_23_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 24.75,
+        "K": 297.5,
+        "ph": 5.0,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_24_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 99.5,
+        "P": 38.25,
+        "K": 325.0,
+        "ph": 7.25,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame (deficit_0.5); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_25_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 800.0,
+        "ph": 6.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_26_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 110.5,
+        "P": 58.5,
+        "K": 221.0,
+        "ph": 6.0,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_27_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 225.0,
+        "P": 24.75,
+        "K": 525.0,
+        "ph": 6.9,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_28_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 150.0,
+        "P": 67.5,
+        "K": 650.0,
+        "ph": 7.25,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_29_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 1190.0,
+        "ph": 6.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "ample",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_30_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 130.0,
+        "P": 33.15,
+        "K": 390.0,
+        "ph": 7.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley (band_edge); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_31_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 47.5,
+        "K": 525.0,
+        "ph": 5.0,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_32_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 150.0,
+        "P": 67.5,
+        "K": 325.0,
+        "ph": 7.25,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_33_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 410.0,
+        "ph": 9.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_34_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 110.5,
+        "P": 33.15,
+        "K": 221.0,
+        "ph": 4.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_35_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 127.5,
+        "P": 24.75,
+        "K": 297.5,
+        "ph": 6.9,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_36_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 99.5,
+        "P": 38.25,
+        "K": 650.0,
+        "ph": 5.5,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame (deficit_0.5); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_37_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 40.0,
+        "K": 410.0,
+        "ph": 8.0,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_38_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 195.0,
+        "P": 33.15,
+        "K": 390.0,
+        "ph": 6.0,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_39_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 225.0,
+        "P": 47.5,
+        "K": 525.0,
+        "ph": 6.9,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_40_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 85.0,
+        "P": 38.25,
+        "K": 975.0,
+        "ph": 5.5,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "ample",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_41_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 172.0,
+        "P": 20.5,
+        "K": 800.0,
+        "ph": 9.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "ample",
+          "Phosphorus": "deficient",
+          "Potassium": "adequate",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_42_highland_nitisols_barley",
+      "kind": "generated",
+      "tags": [
+        "highland_nitisols",
+        "barley",
+        "synthetic_regression",
+        "edge"
+      ],
+      "input": {
+        "N": 130.0,
+        "P": 58.5,
+        "K": 390.0,
+        "ph": 4.5,
+        "crop": "barley",
+        "zone": "highland_nitisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "adequate",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_nitisols / barley (band_edge); expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_43_highland_vertisols_onion",
+      "kind": "generated",
+      "tags": [
+        "highland_vertisols",
+        "onion",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 225.0,
+        "P": 47.5,
+        "K": 297.5,
+        "ph": 6.9,
+        "crop": "onion",
+        "zone": "highland_vertisols"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "adequate",
+          "Phosphorus": "adequate",
+          "Potassium": "deficient",
+          "pH": "adequate"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for highland_vertisols / onion; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_44_rift_valley_sesame",
+      "kind": "generated",
+      "tags": [
+        "rift_valley",
+        "sesame",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 85.0,
+        "P": 38.25,
+        "K": 325.0,
+        "ph": 9.0,
+        "crop": "sesame",
+        "zone": "rift_valley"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "ample"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for rift_valley / sesame; expected statuses come from the deterministic engine.",
+      "gate": true
+    },
+    {
+      "id": "gen_45_arid_semi_arid_teff",
+      "kind": "generated",
+      "tags": [
+        "arid_semi_arid",
+        "teff",
+        "synthetic_regression"
+      ],
+      "input": {
+        "N": 68.0,
+        "P": 20.5,
+        "K": 410.0,
+        "ph": 6.5,
+        "crop": "teff",
+        "zone": "arid_semi_arid"
+      },
+      "expected": {
+        "statuses": {
+          "Nitrogen": "deficient",
+          "Phosphorus": "deficient",
+          "Potassium": "deficient",
+          "pH": "deficient"
+        },
+        "must_include": {},
+        "must_not_include": {},
+        "numbers": {}
+      },
+      "review_status": "unverified",
+      "label_origin": "rule_derived",
+      "source": "Generated by tools/build_golden_set.py from Dataset/agroecological_zones.json; statuses are rule-derived regression pins, not field evidence",
+      "rationale": "Regression case for arid_semi_arid / teff; expected statuses come from the deterministic engine.",
+      "gate": true
+    }
+  ]
+}

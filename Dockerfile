@@ -12,7 +12,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend files only
-COPY api.py db.py config.py i18n.py main.py data_analysis.py ./
+COPY *.py ./
+COPY tools/ ./tools/
 COPY ML/ ./ML/
 COPY Dataset/ ./Dataset/
 COPY tests/ ./tests/

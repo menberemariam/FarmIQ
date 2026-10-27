@@ -54,17 +54,18 @@ class TestCropBands(unittest.TestCase):
 
 class TestCropAwareEngine(unittest.TestCase):
     def test_status_uses_crop_band(self):
-        """N=55 is adequate for generic bands (40-60) but deficient for rice,
-        whose real N band sits around 60-90 in the dataset."""
-        generic = analyze_soil(55, 20, 110, 6.5, crop=None)
-        rice = analyze_soil(55, 20, 110, 6.5, crop="rice")
+        """N=70 is adequate for the generic EthioSIS band (60-100) but
+        deficient for rice, whose real N band sits around 76-84 in the
+        dataset."""
+        generic = analyze_soil(70, 20, 110, 6.5, crop=None)
+        rice = analyze_soil(70, 20, 110, 6.5, crop="rice")
         by_col_g = {a["col"]: a for a in generic}
         by_col_r = {a["col"]: a for a in rice}
         self.assertEqual(by_col_g["N"]["status"], "adequate")
         self.assertEqual(by_col_r["N"]["status"], "deficient")
         self.assertIn("band", by_col_r["N"])
         self.assertAlmostEqual(
-            by_col_r["N"]["deficit"], by_col_r["N"]["band"][0] - 55
+            by_col_r["N"]["deficit"], by_col_r["N"]["band"][0] - 70
         )
 
     def test_recommendation_mentions_crop_and_band(self):

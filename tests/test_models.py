@@ -53,6 +53,17 @@ class TestCropModel(unittest.TestCase):
         probs = self.model.predict_proba([[row[c] for c in config.CROP_FEATURES]])[0]
         self.assertAlmostEqual(probs.sum(), 1.0)
 
+    def test_crop_feature_row_feeds_model(self):
+        """Regression guard: the crop model needs all 7 features. Feeding it a
+        4-column N/P/K/ph row (the old Streamlit crash) must be impossible via
+        the shared helper."""
+        from ML.engine import crop_feature_row
+
+        row = crop_feature_row(50, 20, 120, 6.5)
+        probs = self.model.predict_proba(row)[0]
+        self.assertEqual(len(probs), 22)
+        self.assertAlmostEqual(probs.sum(), 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

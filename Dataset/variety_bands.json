@@ -1,0 +1,226 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "description": "Ethiopian crop x production-area x variety target nutrient bands for variety-aware soil advice. Values use the project's model units (N/P/K kg/ha over the 0-20 cm plow layer; pH in 1:2.5 water). These are advisory target ranges, not measured soil observations, and must not be used as supervised training rows.",
+    "units": {
+      "N": "kg/ha",
+      "P": "kg/ha",
+      "K": "kg/ha",
+      "ph": "1:2.5 water"
+    },
+    "p_factor": 2.6,
+    "bulk_density_g_cm3": 1.3,
+    "plow_layer_cm": 20,
+    "default_precedence": ["variety", "zone", "crop", "generic"],
+    "review_status": "unverified",
+    "review_note": "Ranges are compiled from the supplied EIAR/CIMMYT/JARC/regional advisory notes. Verify against the cited research-center publications before presenting them as official recommendations.",
+    "sources": [
+      "EIAR Maize Technology Manual / CIMMYT Ethiopia 2023",
+      "Hawassa Agricultural Research Center / EIAR 2022",
+      "Kulumsa Agricultural Research Center (KARC) variety release",
+      "Mekelle Agricultural Research Center / EIAR 2021",
+      "Debre Zeit Agricultural Research Center (DZARC) / EthioSIS",
+      "Oromia Agricultural Transformation Institute regional baseline",
+      "Melkassa Agricultural Research Center (MARC) 2022",
+      "Jimma Agricultural Research Center (JARC) Coffee Monograph",
+      "JARC / Sidama Bureau of Agriculture production advisory",
+      "Holetta Agricultural Research Center (HARC) pulse guidelines"
+    ]
+  },
+  "crop_aliases": {
+    "faba bean": "faba_bean",
+    "faba-bean": "faba_bean",
+    "faba": "faba_bean",
+    "field pea": "faba_bean",
+    "coffee arabica": "coffee",
+    "coffee (arabica)": "coffee",
+    "white teff": "teff",
+    "bread wheat": "wheat",
+    "durum wheat": "wheat"
+  },
+  "region_aliases": {
+    "oromiya": "oromia",
+    "oromia region": "oromia",
+    "snnp": "snnpr",
+    "snnpr region": "snnpr",
+    "south nations nationalities and peoples": "snnpr",
+    "arsi": "arsi_bale",
+    "bale": "arsi_bale",
+    "arsi bale": "arsi_bale",
+    "arsi/bale": "arsi_bale",
+    "tigray region": "tigray",
+    "amhara region": "amhara",
+    "jimma zone": "jimma",
+    "jimma/guji": "jimma",
+    "sidama region": "sidama",
+    "lowland oromia": "lowland_oromia_snnpr",
+    "lowland snnpr": "lowland_oromia_snnpr",
+    "lowland oromia/snnpr": "lowland_oromia_snnpr",
+    "lowland oromia / snnpr": "lowland_oromia_snnpr",
+    "highland amhara": "highland_amhara_oromia",
+    "highland oromia": "highland_amhara_oromia",
+    "highland amhara/oromia": "highland_amhara_oromia",
+    "highland amhara / oromia": "highland_amhara_oromia"
+  },
+  "varieties": {
+    "maize_oromia_bh660": {
+      "crop": "maize",
+      "crop_label": "Maize",
+      "region": "oromia",
+      "region_label": "Oromia",
+      "variety": "CIMMYT BH-660 (or similar hybrid)",
+      "aliases": ["BH-660", "BH660", "CIMMYT BH-660", "Highland Hybrid"],
+      "bands": {
+        "N": [160.0, 240.0],
+        "P": [45.0, 90.0],
+        "K": [300.0, 450.0],
+        "ph": [5.5, 6.8]
+      },
+      "source": "EIAR Maize Technology Manual / CIMMYT Ethiopia 2023",
+      "review_status": "unverified"
+    },
+    "maize_snnpr_opv": {
+      "crop": "maize",
+      "crop_label": "Maize",
+      "region": "snnpr",
+      "region_label": "SNNPR",
+      "variety": "Open-Pollinated Varieties (OPVs like Gibe-2 / Melkassa)",
+      "aliases": ["Gibe-2", "Gibe 2", "Melkassa", "OPV", "Open-Pollinated"],
+      "bands": {
+        "N": [110.0, 160.0],
+        "P": [35.0, 65.0],
+        "K": [280.0, 380.0],
+        "ph": [5.8, 7.2]
+      },
+      "source": "Hawassa Agricultural Research Center / EIAR 2022",
+      "review_status": "unverified"
+    },
+    "wheat_arsi_bale_bread": {
+      "crop": "wheat",
+      "crop_label": "Wheat",
+      "region": "arsi_bale",
+      "region_label": "Arsi/Bale",
+      "variety": "Highland Bread Wheat (e.g., Danda'a / Kakaba)",
+      "aliases": ["Danda'a", "Dandaa", "Kakaba", "Highland Bread Wheat", "Bread Wheat"],
+      "bands": {
+        "N": [140.0, 220.0],
+        "P": [50.0, 95.0],
+        "K": [260.0, 400.0],
+        "ph": [5.5, 6.5]
+      },
+      "source": "Kulumsa Agricultural Research Center (KARC) variety release",
+      "review_status": "unverified"
+    },
+    "wheat_tigray_durum": {
+      "crop": "wheat",
+      "crop_label": "Wheat",
+      "region": "tigray",
+      "region_label": "Tigray",
+      "variety": "Durum Wheat (local landraces / improved selections)",
+      "aliases": ["Durum", "Durum Wheat", "Local Landraces", "Improved Selections"],
+      "bands": {
+        "N": [100.0, 150.0],
+        "P": [30.0, 60.0],
+        "K": [350.0, 550.0],
+        "ph": [6.5, 7.8]
+      },
+      "source": "Mekelle Agricultural Research Center / EIAR 2021",
+      "review_status": "unverified"
+    },
+    "teff_amhara_white": {
+      "crop": "teff",
+      "crop_label": "Teff",
+      "region": "amhara",
+      "region_label": "Amhara",
+      "variety": "White Teff (Kuncho DZ-Cr-387 / Kora)",
+      "aliases": ["Kuncho", "DZ-Cr-387", "Kora", "White Teff"],
+      "bands": {
+        "N": [110.0, 145.0],
+        "P": [40.0, 75.0],
+        "K": [260.0, 390.0],
+        "ph": [5.6, 7.0]
+      },
+      "source": "Debre Zeit Agricultural Research Center (DZARC) / EthioSIS",
+      "review_status": "unverified"
+    },
+    "teff_oromia_mixed": {
+      "crop": "teff",
+      "crop_label": "Teff",
+      "region": "oromia",
+      "region_label": "Oromia",
+      "variety": "Mixed Cereal Landraces (Red / Magna / Brown mixes)",
+      "aliases": ["Red Teff", "Magna", "Brown Teff", "Mixed Cereal Landraces"],
+      "bands": {
+        "N": [90.0, 130.0],
+        "P": [35.0, 65.0],
+        "K": [280.0, 420.0],
+        "ph": [5.5, 7.2]
+      },
+      "source": "No variety-specific data; Oromia ATI regional baseline",
+      "review_status": "unverified"
+    },
+    "sorghum_lowland_oromia_snnpr_drought": {
+      "crop": "sorghum",
+      "crop_label": "Sorghum",
+      "region": "lowland_oromia_snnpr",
+      "region_label": "Lowland Oromia / SNNPR",
+      "aliases": ["Melkam", "Teshale", "Drought-Resistant Early", "Lowland Sorghum"],
+      "bands": {
+        "N": [90.0, 140.0],
+        "P": [30.0, 55.0],
+        "K": [320.0, 500.0],
+        "ph": [6.2, 8.0]
+      },
+      "source": "Melkassa Agricultural Research Center (MARC) 2022",
+      "review_status": "unverified"
+    },
+    "coffee_jimma_forest_garden": {
+      "crop": "coffee",
+      "crop_label": "Coffee",
+      "region": "jimma",
+      "region_label": "Jimma",
+      "variety": "Forest/Garden Specialty Coffees (74-release selections)",
+      "aliases": ["74-release", "74 release", "Forest Coffee", "Garden Coffee", "Specialty Coffee"],
+      "bands": {
+        "N": [180.0, 260.0],
+        "P": [35.0, 80.0],
+        "K": [400.0, 600.0],
+        "ph": [5.0, 6.0]
+      },
+      "source": "Jimma Agricultural Research Center (JARC) Coffee Monograph",
+      "review_status": "unverified"
+    },
+    "coffee_sidama_washed": {
+      "crop": "coffee",
+      "crop_label": "Coffee",
+      "region": "sidama",
+      "region_label": "Sidama",
+      "variety": "Washed Premium Sidama Eco-types",
+      "aliases": ["Washed", "Premium Sidama", "Sidama Eco-types", "Sidama Washed"],
+      "bands": {
+        "N": [190.0, 280.0],
+        "P": [40.0, 85.0],
+        "K": [450.0, 650.0],
+        "ph": [5.3, 6.2]
+      },
+      "source": "JARC / Sidama Bureau of Agriculture production advisory",
+      "review_status": "unverified"
+    },
+    "faba_bean_highland_amhara_oromia_large": {
+      "crop": "faba_bean",
+      "crop_label": "Faba bean",
+      "region": "highland_amhara_oromia",
+      "region_label": "Highland Amhara / Oromia",
+      "variety": "Large-Seeded Varieties (e.g., Gebelcho / Tumsa)",
+      "aliases": ["Gebelcho", "Tumsa", "Large-Seeded", "Large Seeded"],
+      "bands": {
+        "N": [60.0, 110.0],
+        "P": [40.0, 75.0],
+        "K": [240.0, 360.0],
+        "ph": [5.8, 7.2]
+      },
+      "source": "Holetta Agricultural Research Center (HARC) pulse guidelines",
+      "review_status": "unverified"
+    }
+  }
+}

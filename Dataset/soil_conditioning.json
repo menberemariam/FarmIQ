@@ -1,0 +1,103 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "description": "SOC/texture-conditioned advisory band modifiers. These are rule-based, unverified priors compiled from the user-supplied Enhancement E matrix (2026), NOT measured soil observations and NOT supervised training labels. Deltas are applied to the project's existing variety/zone/crop/generic base bands.",
+    "units": {
+      "N": "kg/ha",
+      "P": "kg/ha",
+      "K": "kg/ha",
+      "ph": "1:2.5 water",
+      "soc_pct": "%"
+    },
+    "p_factor": 2.6,
+    "review_status": "unverified",
+    "review_note": "Verify the offsets and texture/SOC thresholds against EIAR, EthioSIS and regional research-center guidance before presenting them as official recommendations.",
+    "default_mode": "explicit",
+    "precedence": [
+      "explicit texture_class / soc_pct / soc_class",
+      "woreda default",
+      "soil type texture default (only when SOIL_CONDITIONING_USE_SOIL_TYPE=true)",
+      "zone SOC default",
+      "no adjustment"
+    ],
+    "sources": [
+      "User-supplied Enhancement E SOC/texture-conditioned bands (2026)"
+    ]
+  },
+  "texture_classes": {
+    "sandy": {
+      "name_en": "Sandy",
+      "aliases": ["sand", "arenosol", "arenosols", "borebore", "light"],
+      "retention": "low"
+    },
+    "loam": {
+      "name_en": "Loam",
+      "aliases": ["loamy", "medium", "cambisol", "cambisols", "luvisol", "luvisols"],
+      "retention": "medium"
+    },
+    "clay": {
+      "name_en": "Heavy clay",
+      "aliases": [        "clayey",
+        "heavy",
+        "heavy clay",
+        "vertisol",
+ "vertisols", "nitisol", "nitisols", "koticha"],
+      "retention": "high"
+    }
+  },
+  "soc_classes": {
+    "very_low": {
+      "name_en": "Very low (< 1%)",
+      "max_pct": 1.0
+    },
+    "low": {
+      "name_en": "Low (1-2%)",
+      "min_pct": 1.0,
+      "max_pct": 2.0
+    },
+    "medium": {
+      "name_en": "Medium (2-3%)",
+      "min_pct": 2.0,
+      "max_pct": 3.0
+    },
+    "high": {
+      "name_en": "High (> 3%)",
+      "min_pct": 3.0
+    }
+  },
+  "rules": {
+    "N": {
+      "soc": {
+        "very_low": {"delta": [20.0, 20.0]},
+        "high": {"delta": [-15.0, -15.0]}
+      }
+    },
+    "K": {
+      "texture": {
+        "clay": {"delta": [40.0, 50.0]},
+        "sandy": {"delta": [-40.0, -30.0]}
+      }
+    },
+    "P": {
+      "texture_ph": [
+        {"texture": "clay", "ph_lt": 5.5, "delta": [20.0, 30.0]},
+        {"texture": "sandy", "delta": [-8.0, -3.0]}
+      ]
+    }
+  },
+  "defaults": {
+    "soil_type_texture": {
+      "vertisol": "clay",
+      "nitisol": "clay",
+      "arenosol": "sandy",
+      "cambisol_luvisol": "loam",
+      "andosol": "loam"
+    },
+    "zone_soc": {
+      "highland_nitisols": "medium",
+      "highland_vertisols": "medium",
+      "rift_valley": "low",
+      "arid_semi_arid": "very_low"
+    }
+  }
+}

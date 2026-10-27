@@ -1,0 +1,91 @@
+{
+  "_meta": {
+    "description": "Ethiopian agroecological soil-fertility lookup bands for zone-aware analysis. Values are in the project's model units (kg/ha for N, P, K over the 0-20 cm plow layer; pH in 1:2.5 water). P follows the bulk-density conversion 1 mg/kg = 2.6 kg/ha (bulk density 1.3 g/cm3, 20 cm depth); lab mg/kg values are kept alongside for traceability.",
+    "p_factor": 2.6,
+    "bulk_density_g_cm3": 1.3,
+    "plow_layer_cm": 20,
+    "sources": [
+      "EIAR / Jimma Agricultural Research Center (JARC)",
+      "Debre Zeit Agricultural Research Center (DZARC) / FAO",
+      "Melkassa Agricultural Research Center (MARC)",
+      "Werwer Agricultural Research Center / FAO Ethiopia",
+      "ILRI Vertisol Management Series and EthioSIS national atlas"
+    ]
+  },
+  "highland_nitisols": {
+    "name_en": "Highland Nitisols",
+    "name_am": "ደጋ ናይቲሶሎች",
+    "name_om": "Nitisolii seenaa",
+    "areas": ["Jimma", "Kaffa", "Bench-Sheko", "Gedeo"],
+    "bands": {
+      "N":  {"ideal": [130.0, 260.0], "near": [90.0, 320.0], "unit": "kg_ha"},
+      "P":  {"ideal": [39.0, 78.0], "near": [25.0, 100.0], "unit": "kg_ha", "method": "Mehlich-3", "lab_mg_kg": [15.0, 30.0]},
+      "K":  {"ideal": [260.0, 520.0], "near": [180.0, 650.0], "unit": "kg_ha"},
+      "ph": {"ideal": [5.5, 6.5], "near": [4.8, 7.2], "unit": "ph"}
+    },
+    "constraint": "Al3+/Mn2+ toxicity and extreme P fixation by Fe/Al oxides",
+    "source": "EIAR / Jimma Agricultural Research Center (JARC); Haramaya University soil chemistry profiling",
+    "overrides": {
+      "lime_first_ph": 5.5,
+      "lime_urgent_ph": 5.0,
+      "p_efficiency_ph": 5.0,
+      "p_efficiency_factor": 0.4
+    }
+  },
+  "highland_vertisols": {
+    "name_en": "Highland Vertisols",
+    "name_am": "ደጋ ቬርቲሶሎች",
+    "name_om": "Vertisolii seenaa",
+    "areas": ["Central highlands", "Tigray lowlands"],
+    "bands": {
+      "N":  {"ideal": [150.0, 300.0], "near": [100.0, 360.0], "unit": "kg_ha"},
+      "P":  {"ideal": [30.0, 65.0], "near": [20.0, 85.0], "unit": "kg_ha", "method": "Olsen", "lab_mg_kg": [11.54, 25.0]},
+      "K":  {"ideal": [350.0, 700.0], "near": [250.0, 850.0], "unit": "kg_ha"},
+      "ph": {"ideal": [6.0, 7.8], "near": [5.5, 8.3], "unit": "ph"}
+    },
+    "constraint": "Low N mineralization and poor aeration via waterlogging/denitrification",
+    "source": "Debre Zeit Agricultural Research Center (DZARC) / FAO; ILRI Vertisol Management Series",
+    "overrides": {
+      "split_n": true,
+      "n_splits": 3,
+      "k_bypass_above": 400.0
+    }
+  },
+  "rift_valley": {
+    "name_en": "Rift Valley Soils",
+    "name_am": "የሪፍት ሸለቆ አፈሮች",
+    "name_om": "Afa Rift Valley",
+    "areas": ["Meki", "Ziway", "SNNPR lowlands", "Awash", "Ziway-Shalla"],
+    "bands": {
+      "N":  {"ideal": [100.0, 200.0], "near": [70.0, 250.0], "unit": "kg_ha"},
+      "P":  {"ideal": [45.0, 90.0], "near": [30.0, 115.0], "unit": "kg_ha", "method": "Olsen/Mehlich-3", "lab_mg_kg": [17.31, 34.62]},
+      "K":  {"ideal": [400.0, 900.0], "near": [300.0, 1050.0], "unit": "kg_ha"},
+      "ph": {"ideal": [6.5, 8.0], "near": [6.0, 8.5], "unit": "ph"}
+    },
+    "constraint": "Rapid organic matter depletion and micronutrient locking (Zn/B)",
+    "source": "Melkassa Agricultural Research Center (MARC); FAO-Ethiopia irrigated land suitability frameworks",
+    "overrides": {
+      "micronutrient_flag_ph": 7.5,
+      "shift_blend_to": "NPSZnB"
+    }
+  },
+  "arid_semi_arid": {
+    "name_en": "Lowland Arid / Semi-Arid",
+    "name_am": "የደረቅ ክልል አፈሮች",
+    "name_om": "Biyyee qilleensa booda fi gabaabaa",
+    "areas": ["Somali", "Afar", "Borena"],
+    "bands": {
+      "N":  {"ideal": [80.0, 160.0], "near": [55.0, 200.0], "unit": "kg_ha"},
+      "P":  {"ideal": [25.0, 55.0], "near": [15.0, 75.0], "unit": "kg_ha", "method": "Olsen", "lab_mg_kg": [9.62, 21.15]},
+      "K":  {"ideal": [500.0, 1100.0], "near": [350.0, 1300.0], "unit": "kg_ha"},
+      "ph": {"ideal": [7.5, 8.5], "near": [6.8, 9.0], "unit": "ph"}
+    },
+    "constraint": "High ECe (salinity), sodicity (ESP > 15%), and osmotic stress",
+    "source": "Werwer Agricultural Research Center / FAO Ethiopia; Afar/Somali Regional Bureau of Agriculture salinity mapping",
+    "overrides": {
+      "ec_e_pause_ds_m": 4.0,
+      "reclamation_product": "gypsum",
+      "esp_sodic_above": 15.0
+    }
+  }
+}

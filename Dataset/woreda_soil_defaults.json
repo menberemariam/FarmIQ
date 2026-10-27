@@ -1,0 +1,9 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "description": "Optional Woreda-level fallback for soil texture and SOC class. Values are used only when the caller supplies a woreda and does not supply an explicit texture/SOC value. The map is intentionally empty until verified against EthioSIS / regional soil maps; an unknown woreda falls through silently to the soil-type and zone defaults.",
+    "review_status": "unverified",
+    "sources": []
+  },
+  "woredas": {}
+}
